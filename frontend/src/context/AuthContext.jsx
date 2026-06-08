@@ -28,6 +28,19 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
+  // Listen to custom logout event on token refresh failure
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      setUser(null);
+      setIsAuthenticated(false);
+    };
+
+    window.addEventListener('auth-logout', handleAuthLogout);
+    return () => {
+      window.removeEventListener('auth-logout', handleAuthLogout);
+    };
+  }, []);
+
   // Login Function
   const login = async (email, password) => {
     try {

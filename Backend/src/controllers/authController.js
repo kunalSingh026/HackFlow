@@ -6,6 +6,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
+const RefreshToken = require('../models/refreshToken.model');
+const BlacklistedToken = require('../models/blacklistedToken.model');
+
+const getCookieOptions = (maxAgeMs) => ({
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: maxAgeMs,
+    path: '/'
+});
 
 /**
  * @description Register a new participant and send OTP
@@ -150,20 +160,33 @@ exports.loginUser = async (req, res) => {
             });
         }
 
-        const token = jwt.sign(
-            { id: user._id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '7d' } //Token last for 7 days
-        );
-
         const isHost = await Event.exists({ organizer: user._id });
 
-        res.cookie('jwt', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            sameSite: 'lax'
+        const accessToken = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' } // Access token lasts 15 minutes
+        );
+
+        const refreshSecret = process.env.JWT_REFRESH_SECRET || (process.env.JWT_SECRET + "_refresh");
+        const refreshToken = jwt.sign(
+            { id: user._id, salt: crypto.randomBytes(16).toString('hex') },
+            refreshSecret,
+            { expiresIn: '7d' } // Refresh token lasts 7 days
+        );
+
+        // Save refresh token in DB
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await RefreshToken.create({
+            token: refreshToken,
+            user: user._id,
+            expiresAt
         });
+
+        // Set cookies using our helper
+        res.cookie('accessToken', accessToken, getCookieOptions(15 * 60 * 1000));
+        res.cookie('refreshToken', refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
+        res.clearCookie('jwt');
 
         res.status(200).json({
             message: 'Login successful',
@@ -306,19 +329,134 @@ exports.deleteAccount = async (req, res) => {
 };
 
 /**
- * @description Log user out (Stateless JWT)
+ * @description Log user out
  * @route POST /api/auth/logout
  * @access Public
  */
-exports.logoutUser = (req, res) => {
-    res.cookie('jwt', '', {
-        httpOnly: true,
-        expires: new Date(0),
-        sameSite: 'lax'
-    });
-    res.status(200).json({ 
-        message: "Logged out successfully." 
-    });
+exports.logoutUser = async (req, res) => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        if (refreshToken) {
+            await RefreshToken.deleteOne({ token: refreshToken });
+        }
+
+        const accessToken = req.cookies.accessToken || req.cookies.jwt;
+        if (accessToken) {
+            try {
+                await BlacklistedToken.create({ token: accessToken });
+            } catch (err) {
+                // Ignore duplicate key errors
+            }
+        }
+
+        // Clear cookies
+        const clearCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            expires: new Date(0),
+            path: '/'
+        };
+
+        res.cookie('accessToken', '', clearCookieOptions);
+        res.cookie('refreshToken', '', clearCookieOptions);
+        res.cookie('jwt', '', clearCookieOptions);
+
+        res.status(200).json({ 
+            message: "Logged out successfully." 
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message
+        });
+    }
+};
+
+/**
+ * @description Refresh access and refresh tokens (Refresh Token Rotation)
+ * @route POST /api/auth/refresh
+ * @access Public
+ */
+exports.refreshToken = async (req, res) => {
+    try {
+        const token = req.cookies.refreshToken;
+        if (!token) {
+            return res.status(401).json({ message: 'Refresh token not found' });
+        }
+
+        const refreshSecret = process.env.JWT_REFRESH_SECRET || (process.env.JWT_SECRET + "_refresh");
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, refreshSecret);
+        } catch (err) {
+            return res.status(401).json({ message: 'Invalid or expired refresh token' });
+        }
+
+        // Lookup in database
+        const savedToken = await RefreshToken.findOne({ token });
+        if (!savedToken) {
+            // Replay/compromised token detection
+            // Revoke all refresh tokens for this user immediately
+            await RefreshToken.deleteMany({ user: decoded.id });
+
+            const clearCookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                expires: new Date(0),
+                path: '/'
+            };
+            res.cookie('accessToken', '', clearCookieOptions);
+            res.cookie('refreshToken', '', clearCookieOptions);
+            res.cookie('jwt', '', clearCookieOptions);
+
+            return res.status(401).json({ message: 'Compromised session detected. Logged out of all devices.' });
+        }
+
+        // Delete the used refresh token (RTR rotation)
+        const deleteRes = await RefreshToken.deleteOne({ token });
+        console.log(`[RTR] Deleted old refresh token:`, deleteRes);
+
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+        
+        if (user.isBanned) {
+            return res.status(403).json({ message: 'User is banned' });
+        }
+
+        // Generate new tokens
+        const newAccessToken = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' }
+        );
+
+        const newRefreshToken = jwt.sign(
+            { id: user._id, salt: crypto.randomBytes(16).toString('hex') },
+            refreshSecret,
+            { expiresIn: '7d' }
+        );
+
+        // Save new refresh token
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await RefreshToken.create({
+            token: newRefreshToken,
+            user: user._id,
+            expiresAt
+        });
+
+        // Set cookies
+        res.cookie('accessToken', newAccessToken, getCookieOptions(15 * 60 * 1000));
+        res.cookie('refreshToken', newRefreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
+
+        res.status(200).json({ success: true, message: 'Tokens refreshed successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
+    }
 };
 
 /**
