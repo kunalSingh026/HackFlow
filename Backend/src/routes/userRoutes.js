@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { updateProfile, getProfileByUsername, verifyMobileOtp, resendMobileOtp } = require('../controllers/userController');
+const {
+  updateProfile,
+  getProfileByUsername,
+  verifyMobileOtp,
+  resendMobileOtp,
+} = require('../controllers/userController');
 
 //Import por  middlewares
 const { protect } = require('../middleware/authMiddleware');

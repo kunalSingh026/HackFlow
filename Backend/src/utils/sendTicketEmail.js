@@ -1,20 +1,22 @@
 const nodemailer = require('nodemailer');
 
-const sendTicketEmail = async(options) => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.SMTP_PORT) || 465,
-        secure: process.env.SMTP_SECURE === 'true' || (!process.env.SMTP_SECURE && (parseInt(process.env.SMTP_PORT) || 465) === 465),
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: process.env.NODE_ENV === 'production'
-        }
-    });
+const sendTicketEmail = async (options) => {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT) || 465,
+    secure:
+      process.env.SMTP_SECURE === 'true' ||
+      (!process.env.SMTP_SECURE && (parseInt(process.env.SMTP_PORT) || 465) === 465),
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: process.env.NODE_ENV === 'production',
+    },
+  });
 
-    const htmlTemplate = `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 40px 20px;">
+  const htmlTemplate = `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 40px 20px;">
     <!-- Ticket Container -->
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 650px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
         <tr>
@@ -68,23 +70,23 @@ const sendTicketEmail = async(options) => {
     </table>
 </div>`;
 
-    // Extract the base64 data from the data URI string
-    const base64Data = options.qrCodeDataUri.split("base64,")[1];
+  // Extract the base64 data from the data URI string
+  const base64Data = options.qrCodeDataUri.split('base64,')[1];
 
-    const mailOptions = {
-        from: 'HackFlow Team <noreply@hackflow.com>',
-        to: options.email,
-        subject: `Your Ticket for ${options.eventTitle} 🎟️`,
-        html: htmlTemplate,
-        attachments: [
-            {
-                filename: 'qrcode.png',
-                content: base64Data,
-                encoding: 'base64',
-                cid: 'qrcode' // same cid value as in the html img src
-            }
-        ]
-    };
-    await transporter.sendMail(mailOptions);
+  const mailOptions = {
+    from: 'HackFlow Team <noreply@hackflow.com>',
+    to: options.email,
+    subject: `Your Ticket for ${options.eventTitle} 🎟️`,
+    html: htmlTemplate,
+    attachments: [
+      {
+        filename: 'qrcode.png',
+        content: base64Data,
+        encoding: 'base64',
+        cid: 'qrcode', // same cid value as in the html img src
+      },
+    ],
+  };
+  await transporter.sendMail(mailOptions);
 };
 module.exports = sendTicketEmail;

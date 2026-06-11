@@ -1,11 +1,11 @@
 const express = require('express');
-const { 
-    toggleUserBan, 
-    addItineraryRound,
-    getAllUsers,
-    updateUserRole,
-    assignJudgesToEvent,
-    getAllEventsAdmin
+const {
+  toggleUserBan,
+  addItineraryRound,
+  getAllUsers,
+  updateUserRole,
+  assignJudgesToEvent,
+  getAllEventsAdmin,
 } = require('../controllers/adminController');
 const { protect } = require('../middleware/authMiddleware');
 const { isAdmin } = require('../middleware/authMiddleware');

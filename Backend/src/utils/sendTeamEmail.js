@@ -1,22 +1,22 @@
 const nodemailer = require('nodemailer');
 
-const sendTeamEmail = async(options) => {
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+const sendTeamEmail = async (options) => {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-    let subject = '';
-    let htmlTemplate = '';
+  let subject = '';
+  let htmlTemplate = '';
 
-    // ─── JOIN REQUEST TEMPLATE ──────────────────────────────────────────────────
-    if (options.type === 'JOIN_REQUEST') {
-        subject = `New Request to join ${options.teamName}! 🚀`;
+  // ─── JOIN REQUEST TEMPLATE ──────────────────────────────────────────────────
+  if (options.type === 'JOIN_REQUEST') {
+    subject = `New Request to join ${options.teamName}! 🚀`;
 
-        htmlTemplate = `
+    htmlTemplate = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -199,10 +199,10 @@ const sendTeamEmail = async(options) => {
         `;
 
     // ─── TEAM INVITE APPROVED TEMPLATE ──────────────────────────────────────────
-    } else if (options.type === 'TEAM_INVITE_APPROVED') {
-        subject = `You're in! Welcome to ${options.teamName} 🎉`;
+  } else if (options.type === 'TEAM_INVITE_APPROVED') {
+    subject = `You're in! Welcome to ${options.teamName} 🎉`;
 
-        htmlTemplate = `
+    htmlTemplate = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -406,10 +406,10 @@ const sendTeamEmail = async(options) => {
         </body>
         </html>
         `;
-    } else if (options.type === 'TEAM_INVITATION') {
-        subject = `You've been invited to join ${options.teamName}! 🤝`;
+  } else if (options.type === 'TEAM_INVITATION') {
+    subject = `You've been invited to join ${options.teamName}! 🤝`;
 
-        htmlTemplate = `
+    htmlTemplate = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -595,16 +595,16 @@ const sendTeamEmail = async(options) => {
         </body>
         </html>
         `;
-    }
+  }
 
-    const mailOptions = {
-        from: 'HackFlow Team <noreply@hackflow.com>',
-        to: options.email,
-        subject: subject,
-        html: htmlTemplate
-    };
+  const mailOptions = {
+    from: 'HackFlow Team <noreply@hackflow.com>',
+    to: options.email,
+    subject: subject,
+    html: htmlTemplate,
+  };
 
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendTeamEmail;

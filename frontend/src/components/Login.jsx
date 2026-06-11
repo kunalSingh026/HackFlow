@@ -80,22 +80,25 @@ const Login = ({ onSwitchToRegister }) => {
           </div>
         </div>
         {/* Error Message Display */}
-{error && (
-  <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/25 rounded-lg p-2 text-center mt-2 mb-2">
-    {error}
-  </div>
-)}
+        {error && (
+          <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/25 rounded-lg p-2 text-center mt-2 mb-2">
+            {error}
+          </div>
+        )}
 
         {/* Forgot Password */}
         <div className="flex justify-end -mt-1">
-          <a href="#" className="text-xs text-[#afacca]/60 no-underline transition-colors hover:text-[#f7f6f0]">
+          <a
+            href="#"
+            className="text-xs text-[#afacca]/60 no-underline transition-colors hover:text-[#f7f6f0]"
+          >
             Forgot your password?
           </a>
         </div>
 
         {/* Submit */}
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="w-full flex justify-center items-center gap-2 py-3.5 mt-2 rounded-xl premium-glow-button font-display text-xs font-bold uppercase tracking-wider cursor-pointer"
         >
           Log In

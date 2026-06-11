@@ -51,7 +51,9 @@ const Register = ({ onSwitchToLogin }) => {
 
       setVerificationEmail(formData.email);
       setVerificationStep('otp');
-      setSuccessMessage(res.data.message || 'Registration successful! Please check your email for the OTP.');
+      setSuccessMessage(
+        res.data.message || 'Registration successful! Please check your email for the OTP.'
+      );
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to register. Please try again.');
     } finally {
@@ -89,7 +91,9 @@ const Register = ({ onSwitchToLogin }) => {
           <h1 className="font-display text-2xl font-bold tracking-tight text-[#f7f6f0]">
             Verify your <span className="text-[#afacca]">Email.</span>
           </h1>
-          <p className="text-xs text-[#afacca] mt-1">We have sent a 6-digit OTP code to {verificationEmail}</p>
+          <p className="text-xs text-[#afacca] mt-1">
+            We have sent a 6-digit OTP code to {verificationEmail}
+          </p>
         </div>
 
         {/* Success Alert */}
@@ -129,8 +133,8 @@ const Register = ({ onSwitchToLogin }) => {
           )}
 
           {/* Submit */}
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="w-full flex justify-center items-center gap-2 py-3.5 mt-1 rounded-xl premium-glow-button font-display text-xs font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50"
           >
@@ -298,8 +302,8 @@ const Register = ({ onSwitchToLogin }) => {
         )}
 
         {/* Submit */}
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={loading}
           className="w-full flex justify-center items-center gap-2 py-3.5 mt-1 rounded-xl premium-glow-button font-display text-xs font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50"
         >

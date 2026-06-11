@@ -46,8 +46,6 @@ const AuthPage = () => {
           </Link>
         </motion.div>
 
-
-
         {/* Flip Card */}
         <motion.div
           className="flip-container"

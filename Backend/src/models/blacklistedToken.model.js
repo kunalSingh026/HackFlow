@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
 const BlacklistedTokenSchema = new mongoose.Schema({
-    token: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
+  token: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // TTL index to automatically delete blacklisted access tokens after 15 minutes

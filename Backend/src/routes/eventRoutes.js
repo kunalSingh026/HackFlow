@@ -1,21 +1,30 @@
 const express = require('express');
 const router = express.Router();
 
-const { 
-    createEvent, 
-    getAllEvents, 
-    getEventStats, 
-    getEventById, 
-    updateEvent, 
-    createAnnouncement, 
-    uploadEventBanner,
-    getAssignedEvents
+const {
+  createEvent,
+  getAllEvents,
+  getEventStats,
+  getEventById,
+  updateEvent,
+  createAnnouncement,
+  uploadEventBanner,
+  getAssignedEvents,
+  getPublicStats,
 } = require('../controllers/eventController');
 
-const { registerForEvent, checkInUser, getMyRegistrations } = require('../controllers/registrationController');
+const {
+  registerForEvent,
+  checkInUser,
+  getMyRegistrations,
+} = require('../controllers/registrationController');
 
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
-const { getEventSubmissions, getLeaderboard, publishLeaderboard } = require('../controllers/evaluationController');
+const {
+  getEventSubmissions,
+  getLeaderboard,
+  publishLeaderboard,
+} = require('../controllers/evaluationController');
 const upload = require('../middleware/uploadMiddleware');
 
 /**
@@ -26,6 +35,7 @@ const upload = require('../middleware/uploadMiddleware');
 router.get('/', getAllEvents);
 router.get('/my-registrations', protect, getMyRegistrations);
 router.get('/judge/assigned', protect, getAssignedEvents);
+router.get('/public-stats', getPublicStats);
 router.get('/:eventId', getEventById);
 router.post('/', protect, authorizeRoles('admin'), createEvent);
 router.post('/:eventId/register', protect, registerForEvent);
@@ -41,7 +51,7 @@ router.post('/:eventId/register', protect, registerForEvent);
 
 router.get('/:eventId/stats', protect, authorizeRoles('admin'), getEventStats);
 
-router.post('/:eventId/checkin/:registrationId', protect, authorizeRoles('admin'), checkInUser)
+router.post('/:eventId/checkin/:registrationId', protect, authorizeRoles('admin'), checkInUser);
 
 /**
  * @route GET /api/events/:eventId/submissions
@@ -75,6 +85,5 @@ router.post('/:eventId/announcements', protect, createAnnouncement);
  * @desc Host or Admin uploads a promotional banner
  */
 router.post('/:eventId/upload-banner', protect, upload.single('banner'), uploadEventBanner);
-
 
 module.exports = router;

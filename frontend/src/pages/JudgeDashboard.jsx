@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { 
-  Gavel, 
-  Calendar, 
-  LogOut, 
-  RefreshCw, 
-  Clock, 
-  MapPin, 
+import {
+  Gavel,
+  Calendar,
+  LogOut,
+  RefreshCw,
+  Clock,
+  MapPin,
   Trophy,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 
 const JudgeDashboard = () => {
@@ -46,15 +46,19 @@ const JudgeDashboard = () => {
   return (
     <div className="min-h-screen bg-[#08070d] text-[#f7f6f0] p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-8">
-        
         {/* Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(175,172,202,0.1)] pb-6">
           <div>
             <div className="flex items-center gap-3 mb-1">
               <Gavel className="text-[#afacca]" size={24} />
-              <h1 className="font-display text-3xl font-bold tracking-tight">Judge<span className="text-[#595388]">.</span>Ops</h1>
+              <h1 className="font-display text-3xl font-bold tracking-tight">
+                Judge<span className="text-[#595388]">.</span>Ops
+              </h1>
             </div>
-            <p className="text-sm text-[#afacca]">Assigned Hackathons & Evaluations • Authenticated as {user?.firstName} {user?.lastName}</p>
+            <p className="text-sm text-[#afacca]">
+              Assigned Hackathons & Evaluations • Authenticated as {user?.firstName}{' '}
+              {user?.lastName}
+            </p>
           </div>
           <button
             onClick={handleLogout}
@@ -79,8 +83,10 @@ const JudgeDashboard = () => {
         ) : (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="font-display text-xl font-bold">Assigned Hackathons ({assignedEvents.length})</h2>
-              <button 
+              <h2 className="font-display text-xl font-bold">
+                Assigned Hackathons ({assignedEvents.length})
+              </h2>
+              <button
                 onClick={fetchAssignedEvents}
                 className="flex items-center gap-1.5 text-xs text-[#afacca] hover:text-white transition-colors"
               >
@@ -92,19 +98,21 @@ const JudgeDashboard = () => {
             {assignedEvents.length === 0 ? (
               <div className="glass-card p-12 rounded-2xl border border-[rgba(175,172,202,0.1)] text-center max-w-xl mx-auto space-y-4">
                 <Gavel className="mx-auto text-[#595388]" size={48} />
-                <h3 className="font-display text-lg font-bold text-white">No Assigned Hackathons</h3>
+                <h3 className="font-display text-lg font-bold text-white">
+                  No Assigned Hackathons
+                </h3>
                 <p className="text-xs text-[#afacca] leading-relaxed">
-                  You are not currently assigned as a judge to any active hackathons. 
-                  Admins can assign you to events through the HackFlow Admin Portal.
+                  You are not currently assigned as a judge to any active hackathons. Admins can
+                  assign you to events through the HackFlow Admin Portal.
                 </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {assignedEvents.map(event => {
+                {assignedEvents.map((event) => {
                   const isCompleted = event.status === 'completed';
                   return (
-                    <div 
-                      key={event._id} 
+                    <div
+                      key={event._id}
                       className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-[rgba(175,172,202,0.12)] hover:border-[#595388]/50 transition-all duration-300 relative group overflow-hidden"
                     >
                       {/* Ambient background glow on hover */}
@@ -113,22 +121,30 @@ const JudgeDashboard = () => {
                       <div className="space-y-4 relative z-10">
                         {/* Status Tag */}
                         <div className="flex justify-between items-start">
-                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${
-                            isCompleted 
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                              : event.status === 'ongoing'
-                                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                                : 'bg-[#595388]/20 text-[#afacca] border border-[rgba(175,172,202,0.15)]'
-                          }`}>
+                          <span
+                            className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${
+                              isCompleted
+                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                : event.status === 'ongoing'
+                                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                  : 'bg-[#595388]/20 text-[#afacca] border border-[rgba(175,172,202,0.15)]'
+                            }`}
+                          >
                             {event.status}
                           </span>
-                          <span className="text-[10px] text-[#afacca] uppercase font-semibold">{event.category}</span>
+                          <span className="text-[10px] text-[#afacca] uppercase font-semibold">
+                            {event.category}
+                          </span>
                         </div>
 
                         {/* Event Title */}
                         <div>
-                          <h3 className="font-display text-lg font-bold text-white group-hover:text-glow transition-all">{event.title}</h3>
-                          <p className="text-xs text-[#afacca] line-clamp-2 mt-1">{event.description?.short}</p>
+                          <h3 className="font-display text-lg font-bold text-white group-hover:text-glow transition-all">
+                            {event.title}
+                          </h3>
+                          <p className="text-xs text-[#afacca] line-clamp-2 mt-1">
+                            {event.description?.short}
+                          </p>
                         </div>
 
                         {/* Specs */}
@@ -136,12 +152,23 @@ const JudgeDashboard = () => {
                           <div className="flex items-center gap-2">
                             <Clock size={12} className="text-[#595388]" />
                             <span>
-                              {new Date(event.timing?.startDate).toLocaleDateString([], { month: 'short', day: 'numeric' })} - {new Date(event.timing?.endDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                              {new Date(event.timing?.startDate).toLocaleDateString([], {
+                                month: 'short',
+                                day: 'numeric',
+                              })}{' '}
+                              -{' '}
+                              {new Date(event.timing?.endDate).toLocaleDateString([], {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <MapPin size={12} className="text-[#595388]" />
-                            <span className="capitalize">{event.mode} {event.venue && `• ${event.venue}`}</span>
+                            <span className="capitalize">
+                              {event.mode} {event.venue && `• ${event.venue}`}
+                            </span>
                           </div>
                         </div>
                       </div>

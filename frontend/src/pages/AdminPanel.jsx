@@ -17,7 +17,7 @@ import {
   Check,
   Award,
   ChevronRight,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 
 const AdminPanel = () => {
@@ -102,7 +102,9 @@ const AdminPanel = () => {
   const handleToggleBan = async (userId) => {
     try {
       const res = await api.put(`/admin/users/${userId}/ban`);
-      setUsers(prev => prev.map(u => u._id === userId ? { ...u, isBanned: res.data.isBanned } : u));
+      setUsers((prev) =>
+        prev.map((u) => (u._id === userId ? { ...u, isBanned: res.data.isBanned } : u))
+      );
       setActionSuccess(res.data.message);
       setActionError('');
     } catch (err) {
@@ -114,7 +116,9 @@ const AdminPanel = () => {
   const handleChangeRole = async (userId, newRole) => {
     try {
       const res = await api.put(`/admin/users/${userId}/role`, { role: newRole });
-      setUsers(prev => prev.map(u => u._id === userId ? { ...u, role: res.data.user.role } : u));
+      setUsers((prev) =>
+        prev.map((u) => (u._id === userId ? { ...u, role: res.data.user.role } : u))
+      );
       setActionSuccess(res.data.message);
       setActionError('');
     } catch (err) {
@@ -125,13 +129,13 @@ const AdminPanel = () => {
   // Open Judge Assignment
   const openAssignJudges = (event) => {
     setSelectedEventForJudges(event);
-    setAssignedJudgeIds(event.judges.map(j => j._id || j));
+    setAssignedJudgeIds(event.judges.map((j) => j._id || j));
     // Filter out all users with the role 'judge' from our users database
-    const judgeUsers = users.filter(u => u.role === 'judge') || [];
+    const judgeUsers = users.filter((u) => u.role === 'judge') || [];
     if (judgeUsers.length === 0) {
       // If we don't have users loaded, fetch them or extract judges
-      api.get('/admin/users').then(res => {
-        const judges = res.data.users.filter(u => u.role === 'judge');
+      api.get('/admin/users').then((res) => {
+        const judges = res.data.users.filter((u) => u.role === 'judge');
         setAvailableJudges(judges);
       });
     } else {
@@ -145,7 +149,7 @@ const AdminPanel = () => {
     try {
       setSavingJudges(true);
       const res = await api.put(`/admin/events/${selectedEventForJudges._id}/judges`, {
-        judgeIds: assignedJudgeIds
+        judgeIds: assignedJudgeIds,
       });
       setActionSuccess(res.data.message);
       setSelectedEventForJudges(null);
@@ -176,7 +180,12 @@ const AdminPanel = () => {
   // Publish Leaderboard
   const handlePublishLeaderboard = async () => {
     if (!selectedEventForPreview) return;
-    if (!window.confirm(`Are you absolutely sure you want to publish the leaderboard for "${selectedEventForPreview.title}"? This will lock all grading and email all participants!`)) return;
+    if (
+      !window.confirm(
+        `Are you absolutely sure you want to publish the leaderboard for "${selectedEventForPreview.title}"? This will lock all grading and email all participants!`
+      )
+    )
+      return;
 
     try {
       setIsPublishing(true);
@@ -192,12 +201,12 @@ const AdminPanel = () => {
   };
 
   // Filtering users
-  const filteredUsers = users.filter(u => {
-    const matchesSearch = 
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch =
       `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.username.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesRole = roleFilter === 'all' || u.role === roleFilter;
     return matchesSearch && matchesRole;
   });
@@ -205,13 +214,14 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-[#08070d] text-[#f7f6f0] p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-8">
-
         {/* Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(175,172,202,0.1)] pb-6">
           <div>
             <div className="flex items-center gap-3 mb-1">
               <Shield className="text-[#afacca]" size={24} />
-              <h1 className="font-display text-3xl font-bold tracking-tight">HQ<span className="text-[#595388]">.</span>Command</h1>
+              <h1 className="font-display text-3xl font-bold tracking-tight">
+                HQ<span className="text-[#595388]">.</span>Command
+              </h1>
             </div>
             <p className="text-sm text-[#afacca]">Centralized Management Operations Center</p>
           </div>
@@ -265,11 +275,13 @@ const AdminPanel = () => {
         {/* Tab Contents */}
         {activeTab === 'users' ? (
           <div className="space-y-6">
-            
             {/* Search and Filters */}
             <div className="glass-card p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
               <div className="relative w-full md:max-w-md">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#afacca]" size={16} />
+                <Search
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#afacca]"
+                  size={16}
+                />
                 <input
                   type="text"
                   placeholder="Search users by name, email, username..."
@@ -320,7 +332,7 @@ const AdminPanel = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[rgba(175,172,202,0.08)]">
-                      {filteredUsers.map(u => (
+                      {filteredUsers.map((u) => (
                         <tr key={u._id} className="hover:bg-white/[0.02] transition-all">
                           <td className="py-4 px-6 font-semibold text-white">
                             {u.firstName} {u.lastName}
@@ -340,11 +352,13 @@ const AdminPanel = () => {
                             </select>
                           </td>
                           <td className="py-4 px-6 text-center">
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                              u.isBanned 
-                                ? 'bg-red-500/15 text-red-400 border border-red-500/25' 
-                                : 'bg-green-500/15 text-green-400 border border-green-500/25'
-                            }`}>
+                            <span
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                                u.isBanned
+                                  ? 'bg-red-500/15 text-red-400 border border-red-500/25'
+                                  : 'bg-green-500/15 text-green-400 border border-green-500/25'
+                              }`}
+                            >
                               {u.isBanned ? 'Banned' : 'Active'}
                             </span>
                           </td>
@@ -366,7 +380,10 @@ const AdminPanel = () => {
                       ))}
                       {filteredUsers.length === 0 && (
                         <tr>
-                          <td colSpan={6} className="py-8 text-center text-xs text-[#afacca] italic">
+                          <td
+                            colSpan={6}
+                            className="py-8 text-center text-xs text-[#afacca] italic"
+                          >
                             No users match the search criteria.
                           </td>
                         </tr>
@@ -398,42 +415,58 @@ const AdminPanel = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {events.map(event => {
+                {events.map((event) => {
                   const isCompleted = event.status === 'completed';
                   return (
-                    <div 
-                      key={event._id} 
+                    <div
+                      key={event._id}
                       className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-[rgba(175,172,202,0.12)] relative group"
                     >
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                            isCompleted 
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25' 
-                              : event.status === 'ongoing'
-                                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
-                                : 'bg-[#595388]/20 text-[#afacca] border border-[rgba(175,172,202,0.15)]'
-                          }`}>
+                          <span
+                            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                              isCompleted
+                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                                : event.status === 'ongoing'
+                                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
+                                  : 'bg-[#595388]/20 text-[#afacca] border border-[rgba(175,172,202,0.15)]'
+                            }`}
+                          >
                             {event.status}
                           </span>
-                          <span className="text-[10px] text-[#afacca] font-mono">Organized by {event.organizer?.firstName || 'Host'}</span>
+                          <span className="text-[10px] text-[#afacca] font-mono">
+                            Organized by {event.organizer?.firstName || 'Host'}
+                          </span>
                         </div>
 
                         <div>
-                          <h4 className="font-display font-bold text-lg text-white group-hover:text-glow transition-all">{event.title}</h4>
-                          <p className="text-xs text-[#afacca] line-clamp-2 mt-1">{event.description?.short}</p>
+                          <h4 className="font-display font-bold text-lg text-white group-hover:text-glow transition-all">
+                            {event.title}
+                          </h4>
+                          <p className="text-xs text-[#afacca] line-clamp-2 mt-1">
+                            {event.description?.short}
+                          </p>
                         </div>
 
                         <div className="pt-2 border-t border-white/[0.05] space-y-2">
-                          <p className="text-xs text-[#afacca] font-bold uppercase tracking-wider text-[10px]">Assigned Judges ({event.judges?.length || 0})</p>
+                          <p className="text-xs text-[#afacca] font-bold uppercase tracking-wider text-[10px]">
+                            Assigned Judges ({event.judges?.length || 0})
+                          </p>
                           <div className="flex flex-wrap gap-1.5">
-                            {event.judges && event.judges.map(j => (
-                              <span key={j._id || j} className="text-[10px] px-2 py-1 rounded bg-[#595388]/20 text-[#afacca] border border-[rgba(175,172,202,0.1)]">
-                                {j.firstName ? `${j.firstName} ${j.lastName}` : `ID: ${j}`}
-                              </span>
-                            ))}
+                            {event.judges &&
+                              event.judges.map((j) => (
+                                <span
+                                  key={j._id || j}
+                                  className="text-[10px] px-2 py-1 rounded bg-[#595388]/20 text-[#afacca] border border-[rgba(175,172,202,0.1)]"
+                                >
+                                  {j.firstName ? `${j.firstName} ${j.lastName}` : `ID: ${j}`}
+                                </span>
+                              ))}
                             {(!event.judges || event.judges.length === 0) && (
-                              <span className="text-xs text-[#afacca]/60 italic">No judges assigned yet</span>
+                              <span className="text-xs text-[#afacca]/60 italic">
+                                No judges assigned yet
+                              </span>
                             )}
                           </div>
                         </div>
@@ -492,18 +525,21 @@ const AdminPanel = () => {
 
               <div className="space-y-3">
                 <p className="text-xs text-[#afacca] leading-relaxed">
-                  Select judges who will evaluate submissions for this event. Users must have the role **Judge** to appear in this list.
+                  Select judges who will evaluate submissions for this event. Users must have the
+                  role **Judge** to appear in this list.
                 </p>
                 <div className="space-y-2 border border-[rgba(175,172,202,0.12)] rounded-xl p-3 bg-black/40 max-h-56 overflow-y-auto">
-                  {availableJudges.map(judge => {
+                  {availableJudges.map((judge) => {
                     const isChecked = assignedJudgeIds.includes(judge._id);
                     return (
-                      <label 
-                        key={judge._id} 
+                      <label
+                        key={judge._id}
                         className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.03] cursor-pointer"
                       >
                         <div className="flex flex-col">
-                          <span className="text-xs font-semibold text-white">{judge.firstName} {judge.lastName}</span>
+                          <span className="text-xs font-semibold text-white">
+                            {judge.firstName} {judge.lastName}
+                          </span>
                           <span className="text-[10px] text-[#afacca]">@{judge.username}</span>
                         </div>
                         <input
@@ -511,9 +547,9 @@ const AdminPanel = () => {
                           checked={isChecked}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setAssignedJudgeIds(prev => [...prev, judge._id]);
+                              setAssignedJudgeIds((prev) => [...prev, judge._id]);
                             } else {
-                              setAssignedJudgeIds(prev => prev.filter(id => id !== judge._id));
+                              setAssignedJudgeIds((prev) => prev.filter((id) => id !== judge._id));
                             }
                           }}
                           className="w-4 h-4 accent-[#595388]"
@@ -523,7 +559,8 @@ const AdminPanel = () => {
                   })}
                   {availableJudges.length === 0 && (
                     <p className="text-xs text-[#afacca]/60 italic text-center py-4">
-                      No users with the role 'judge' found. Go to User Moderation to promote a user to judge first.
+                      No users with the role 'judge' found. Go to User Moderation to promote a user
+                      to judge first.
                     </p>
                   )}
                 </div>
@@ -556,7 +593,9 @@ const AdminPanel = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <Sparkles className="text-yellow-400" size={16} />
-                    <h3 className="font-display font-bold text-lg text-white">Leaderboard Console</h3>
+                    <h3 className="font-display font-bold text-lg text-white">
+                      Leaderboard Console
+                    </h3>
                   </div>
                   <p className="text-xs text-[#afacca] mt-0.5">{selectedEventForPreview.title}</p>
                 </div>
@@ -575,14 +614,15 @@ const AdminPanel = () => {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  
                   {/* Status Indicator */}
                   <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-[rgba(175,172,202,0.1)]">
                     <div>
-                      <span className="text-[10px] text-[#afacca] uppercase block font-bold">Grading Status</span>
+                      <span className="text-[10px] text-[#afacca] uppercase block font-bold">
+                        Grading Status
+                      </span>
                       <strong className="text-xs text-white">
-                        {selectedEventForPreview.status === 'completed' 
-                          ? 'Grading Locked & Published' 
+                        {selectedEventForPreview.status === 'completed'
+                          ? 'Grading Locked & Published'
                           : 'Live Scoring (Active)'}
                       </strong>
                     </div>
@@ -600,7 +640,9 @@ const AdminPanel = () => {
 
                   {/* Leaderboard Rankings List */}
                   <div className="space-y-2">
-                    <p className="text-xs text-[#afacca] font-bold uppercase tracking-wider text-[10px]">Rankings Preview</p>
+                    <p className="text-xs text-[#afacca] font-bold uppercase tracking-wider text-[10px]">
+                      Rankings Preview
+                    </p>
                     <div className="border border-[rgba(175,172,202,0.12)] rounded-xl overflow-hidden bg-black/40">
                       <div className="max-h-64 overflow-y-auto">
                         <table className="w-full text-left border-collapse text-xs">
@@ -617,16 +659,29 @@ const AdminPanel = () => {
                             {previewLeaderboard.map((team, idx) => (
                               <tr key={team.teamId} className="hover:bg-white/[0.02]">
                                 <td className="py-3 px-4 font-bold text-white">#{idx + 1}</td>
-                                <td className="py-3 px-4 font-semibold text-white">{team.teamName}</td>
+                                <td className="py-3 px-4 font-semibold text-white">
+                                  {team.teamName}
+                                </td>
                                 <td className="py-3 px-4 text-[#afacca] font-mono text-[10px]">
                                   {team.projectDetails?.githubLink ? (
-                                    <a href={team.projectDetails.githubLink} target="_blank" rel="noreferrer" className="underline hover:text-white">
+                                    <a
+                                      href={team.projectDetails.githubLink}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="underline hover:text-white"
+                                    >
                                       Link
                                     </a>
-                                  ) : '-'}
+                                  ) : (
+                                    '-'
+                                  )}
                                 </td>
-                                <td className="py-3 px-4 text-center text-[#afacca] font-semibold">{team.judgesCount}</td>
-                                <td className="py-3 px-4 text-right text-yellow-400 font-bold font-mono text-sm">{team.averageScore} / 100</td>
+                                <td className="py-3 px-4 text-center text-[#afacca] font-semibold">
+                                  {team.judgesCount}
+                                </td>
+                                <td className="py-3 px-4 text-right text-yellow-400 font-bold font-mono text-sm">
+                                  {team.averageScore} / 100
+                                </td>
                               </tr>
                             ))}
                             {previewLeaderboard.length === 0 && (
@@ -641,7 +696,6 @@ const AdminPanel = () => {
                       </div>
                     </div>
                   </div>
-
                 </div>
               )}
 
@@ -656,7 +710,6 @@ const AdminPanel = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

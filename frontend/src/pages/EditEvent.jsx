@@ -12,14 +12,14 @@ import {
   Trash2,
   ArrowLeft,
   Loader,
-  Users
+  Users,
 } from 'lucide-react';
 
 const EditEvent = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
   const [activeTab, setActiveTab] = useState('basic');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -62,7 +62,7 @@ const EditEvent = () => {
       tshirts: false,
       meals: false,
       cloudCredits: false,
-      certificates: false
+      certificates: false,
     },
 
     // Judging Rubric
@@ -84,8 +84,8 @@ const EditEvent = () => {
       githubLink: true,
       demoVideo: true,
       presentationLink: true,
-      description: true
-    }
+      description: true,
+    },
   });
 
   const [newTrackTag, setNewTrackTag] = useState('');
@@ -126,11 +126,13 @@ const EditEvent = () => {
           hackingStart: formatDateTime(event.phases?.hackingStart),
           hackingEnd: formatDateTime(event.phases?.hackingEnd),
           judgingValedictory: formatDateTime(event.phases?.judgingValedictory),
-          mentoringRounds: event.phases?.mentoringRounds ? event.phases.mentoringRounds.map(r => ({
-            roundNumber: r.roundNumber,
-            time: formatDateTime(r.time),
-            details: r.details || ''
-          })) : [],
+          mentoringRounds: event.phases?.mentoringRounds
+            ? event.phases.mentoringRounds.map((r) => ({
+                roundNumber: r.roundNumber,
+                time: formatDateTime(r.time),
+                details: r.details || '',
+              }))
+            : [],
 
           tracks: event.tracks || [],
           customProblemStatements: event.customProblemStatements || [],
@@ -144,7 +146,7 @@ const EditEvent = () => {
             tshirts: false,
             meals: false,
             cloudCredits: false,
-            certificates: false
+            certificates: false,
           },
 
           judgingCriteria: event.judgingCriteria || [],
@@ -161,8 +163,8 @@ const EditEvent = () => {
             githubLink: true,
             demoVideo: true,
             presentationLink: true,
-            description: true
-          }
+            description: true,
+          },
         });
       } catch (err) {
         console.error(err);
@@ -177,164 +179,155 @@ const EditEvent = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleSwagChange = (e) => {
     const { name, checked } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       swagPerks: {
         ...prev.swagPerks,
-        [name]: checked
-      }
+        [name]: checked,
+      },
     }));
   };
 
   const handleSubmissionRequirementsChange = (e) => {
     const { name, checked } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       submissionRequirements: {
         ...prev.submissionRequirements,
-        [name]: checked
-      }
+        [name]: checked,
+      },
     }));
   };
 
   const addMentoringRound = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       mentoringRounds: [
         ...prev.mentoringRounds,
-        { roundNumber: prev.mentoringRounds.length + 1, time: '', details: '' }
-      ]
+        { roundNumber: prev.mentoringRounds.length + 1, time: '', details: '' },
+      ],
     }));
   };
 
   const removeMentoringRound = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      mentoringRounds: prev.mentoringRounds.filter((_, i) => i !== index)
+      mentoringRounds: prev.mentoringRounds.filter((_, i) => i !== index),
     }));
   };
 
   const handleMentoringChange = (index, field, value) => {
     const updated = [...eventData.mentoringRounds];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, mentoringRounds: updated }));
+    setEventData((prev) => ({ ...prev, mentoringRounds: updated }));
   };
 
   const addTrackTag = () => {
     if (newTrackTag.trim() && !eventData.tracks.includes(newTrackTag.trim())) {
-      setEventData(prev => ({
+      setEventData((prev) => ({
         ...prev,
-        tracks: [...prev.tracks, newTrackTag.trim()]
+        tracks: [...prev.tracks, newTrackTag.trim()],
       }));
       setNewTrackTag('');
     }
   };
 
   const removeTrackTag = (tag) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      tracks: prev.tracks.filter(t => t !== tag)
+      tracks: prev.tracks.filter((t) => t !== tag),
     }));
   };
 
   const addProblemStatement = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       customProblemStatements: [
         ...prev.customProblemStatements,
-        { title: '', description: '', sponsor: '' }
-      ]
+        { title: '', description: '', sponsor: '' },
+      ],
     }));
   };
 
   const removeProblemStatement = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      customProblemStatements: prev.customProblemStatements.filter((_, i) => i !== index)
+      customProblemStatements: prev.customProblemStatements.filter((_, i) => i !== index),
     }));
   };
 
   const handleProblemChange = (index, field, value) => {
     const updated = [...eventData.customProblemStatements];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, customProblemStatements: updated }));
+    setEventData((prev) => ({ ...prev, customProblemStatements: updated }));
   };
 
   const addSpecialPrize = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      specialCategories: [
-        ...prev.specialCategories,
-        { categoryName: '', prizeDescription: '' }
-      ]
+      specialCategories: [...prev.specialCategories, { categoryName: '', prizeDescription: '' }],
     }));
   };
 
   const removeSpecialPrize = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      specialCategories: prev.specialCategories.filter((_, i) => i !== index)
+      specialCategories: prev.specialCategories.filter((_, i) => i !== index),
     }));
   };
 
   const handleSpecialPrizeChange = (index, field, value) => {
     const updated = [...eventData.specialCategories];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, specialCategories: updated }));
+    setEventData((prev) => ({ ...prev, specialCategories: updated }));
   };
 
   const addJudgingCriteria = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      judgingCriteria: [
-        ...prev.judgingCriteria,
-        { criteriaName: '', weightage: 0 }
-      ]
+      judgingCriteria: [...prev.judgingCriteria, { criteriaName: '', weightage: 0 }],
     }));
   };
 
   const removeJudgingCriteria = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      judgingCriteria: prev.judgingCriteria.filter((_, i) => i !== index)
+      judgingCriteria: prev.judgingCriteria.filter((_, i) => i !== index),
     }));
   };
 
   const handleJudgingCriteriaChange = (index, field, value) => {
     const updated = [...eventData.judgingCriteria];
     updated[index][field] = field === 'weightage' ? Number(value) : value;
-    setEventData(prev => ({ ...prev, judgingCriteria: updated }));
+    setEventData((prev) => ({ ...prev, judgingCriteria: updated }));
   };
 
   const addFaq = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      faqs: [
-        ...prev.faqs,
-        { question: '', answer: '' }
-      ]
+      faqs: [...prev.faqs, { question: '', answer: '' }],
     }));
   };
 
   const removeFaq = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      faqs: prev.faqs.filter((_, i) => i !== index)
+      faqs: prev.faqs.filter((_, i) => i !== index),
     }));
   };
 
   const handleFaqChange = (index, field, value) => {
     const updated = [...eventData.faqs];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, faqs: updated }));
+    setEventData((prev) => ({ ...prev, faqs: updated }));
   };
 
   const handleSubmit = async (e) => {
@@ -357,7 +350,7 @@ const EditEvent = () => {
       shortlistAnnouncement: eventData.shortlistAnnouncement,
       hackingStart: eventData.hackingStart,
       hackingEnd: eventData.hackingEnd,
-      judgingValedictory: eventData.judgingValedictory
+      judgingValedictory: eventData.judgingValedictory,
     };
 
     const keys = [
@@ -367,19 +360,20 @@ const EditEvent = () => {
       'shortlistAnnouncement',
       'hackingStart',
       'hackingEnd',
-      'judgingValedictory'
+      'judgingValedictory',
     ];
 
     for (let i = 0; i < keys.length; i++) {
       const currentVal = dates[keys[i]];
       if (!currentVal) continue;
-      
+
       for (let j = i + 1; j < keys.length; j++) {
         const nextVal = dates[keys[j]];
         if (!nextVal) continue;
-        
+
         if (new Date(currentVal) > new Date(nextVal)) {
-          const formatLabel = (key) => key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+          const formatLabel = (key) =>
+            key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
           setError(`${formatLabel(keys[i])} must be scheduled before ${formatLabel(keys[j])}.`);
           setSaving(false);
           return;
@@ -393,17 +387,21 @@ const EditEvent = () => {
         const round = eventData.mentoringRounds[i];
         if (!round.time) continue;
         if (lastTime && new Date(round.time) < new Date(lastTime)) {
-          setError(`Mentoring Round ${i + 1} must be scheduled after ${lastTime === eventData.hackingStart ? 'Hacking Coding Start' : 'previous step/round'}.`);
+          setError(
+            `Mentoring Round ${i + 1} must be scheduled after ${lastTime === eventData.hackingStart ? 'Hacking Coding Start' : 'previous step/round'}.`
+          );
           setSaving(false);
           return;
         }
         lastTime = round.time;
       }
-      
+
       if (eventData.hackingEnd) {
         const lastRound = eventData.mentoringRounds[eventData.mentoringRounds.length - 1];
         if (lastRound.time && new Date(lastRound.time) > new Date(eventData.hackingEnd)) {
-          setError(`Mentoring Round ${eventData.mentoringRounds.length} must be scheduled before Hacking Coding Freeze.`);
+          setError(
+            `Mentoring Round ${eventData.mentoringRounds.length} must be scheduled before Hacking Coding Freeze.`
+          );
           setSaving(false);
           return;
         }
@@ -425,20 +423,23 @@ const EditEvent = () => {
         title: eventData.title,
         description: {
           short: eventData.shortDesc,
-          detailed: eventData.detailedDesc
+          detailed: eventData.detailedDesc,
         },
         category: eventData.category,
-        tags: eventData.tags.split(',').map(t => t.trim()).filter(Boolean),
+        tags: eventData.tags
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean),
         mode: eventData.mode,
-        venue: (eventData.mode === 'offline' || eventData.mode === 'hybrid') ? eventData.venue : '',
+        venue: eventData.mode === 'offline' || eventData.mode === 'hybrid' ? eventData.venue : '',
         ticketing: {
           isFree: true,
           ticketPrice: 0,
           currency: 'INR',
-          totalSeats: Number(eventData.totalSeats)
+          totalSeats: Number(eventData.totalSeats),
         },
         visibility: {
-          isPublic: eventData.isPublic
+          isPublic: eventData.isPublic,
         },
         phases: {
           registrationStart: eventData.registrationStart || undefined,
@@ -447,12 +448,12 @@ const EditEvent = () => {
           shortlistAnnouncement: eventData.shortlistAnnouncement || undefined,
           hackingStart: eventData.hackingStart || undefined,
           hackingEnd: eventData.hackingEnd || undefined,
-          mentoringRounds: eventData.mentoringRounds.map(r => ({
+          mentoringRounds: eventData.mentoringRounds.map((r) => ({
             roundNumber: r.roundNumber,
             time: r.time || undefined,
-            details: r.details
+            details: r.details,
           })),
-          judgingValedictory: eventData.judgingValedictory || undefined
+          judgingValedictory: eventData.judgingValedictory || undefined,
         },
         tracks: eventData.tracks,
         customProblemStatements: eventData.customProblemStatements,
@@ -462,21 +463,21 @@ const EditEvent = () => {
           secondPlace: eventData.secondPlace,
           thirdPlace: eventData.thirdPlace,
           specialCategories: eventData.specialCategories,
-          swagPerks: eventData.swagPerks
+          swagPerks: eventData.swagPerks,
         },
         judgingCriteria: eventData.judgingCriteria,
         eligibility: {
           institutionPolicy: eventData.institutionPolicy,
           interCollegeTeams: eventData.interCollegeTeams,
           minTeamSize: Number(eventData.minTeamSize),
-          maxTeamSize: Number(eventData.maxTeamSize)
+          maxTeamSize: Number(eventData.maxTeamSize),
         },
         submissionRequirements: eventData.submissionRequirements,
         logistics: {
           discordInvite: eventData.discordInvite,
           whatsappInvite: eventData.whatsappInvite,
-          faqs: eventData.faqs
-        }
+          faqs: eventData.faqs,
+        },
       };
 
       await api.put(`/events/${eventId}`, payload);
@@ -501,18 +502,21 @@ const EditEvent = () => {
   return (
     <div className="min-h-screen bg-[#08070d] text-[#f7f6f0] p-6 md:p-10">
       <div className="max-w-4xl mx-auto space-y-6">
-        
         {/* Navigation / Header */}
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => navigate('/dashboard')} 
+          <button
+            onClick={() => navigate('/dashboard')}
             className="p-2.5 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[#595388]/10 hover:bg-[#595388]/20 transition-all text-[#afacca]"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <h1 className="font-display text-2xl font-bold tracking-tight">Modify Hackathon Event</h1>
-            <p className="text-xs text-[#afacca]">Make adjustments to timelines, criteria, tracks or settings</p>
+            <h1 className="font-display text-2xl font-bold tracking-tight">
+              Modify Hackathon Event
+            </h1>
+            <p className="text-xs text-[#afacca]">
+              Make adjustments to timelines, criteria, tracks or settings
+            </p>
           </div>
         </div>
 
@@ -535,8 +539,8 @@ const EditEvent = () => {
             { id: 'timeline', label: 'Timelines', icon: Calendar },
             { id: 'tracks', label: 'Tracks & Problems', icon: Layers },
             { id: 'prizes', label: 'Prizes & Rubric', icon: Award },
-            { id: 'logistics', label: 'Eligibility & Links', icon: HelpCircle }
-          ].map(tab => {
+            { id: 'logistics', label: 'Eligibility & Links', icon: HelpCircle },
+          ].map((tab) => {
             const Icon = tab.icon;
             return (
               <button
@@ -544,8 +548,8 @@ const EditEvent = () => {
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
-                  activeTab === tab.id 
-                    ? 'bg-[#595388] text-[#f7f6f0]' 
+                  activeTab === tab.id
+                    ? 'bg-[#595388] text-[#f7f6f0]'
                     : 'text-[#afacca] hover:bg-[#595388]/20'
                 }`}
               >
@@ -557,15 +561,21 @@ const EditEvent = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="glass-card p-6 md:p-8 rounded-2xl border border-[rgba(175,172,202,0.15)] space-y-6">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="glass-card p-6 md:p-8 rounded-2xl border border-[rgba(175,172,202,0.15)] space-y-6"
+        >
           {/* TAB 1: BASIC INFO */}
           {activeTab === 'basic' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Event Basics</h3>
-              
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Event Basics
+              </h3>
+
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hackathon Title</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Hackathon Title
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -579,7 +589,9 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Category</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Category
+                  </label>
                   <input
                     type="text"
                     name="category"
@@ -590,7 +602,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hosting Mode</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Hosting Mode
+                  </label>
                   <select
                     name="mode"
                     value={eventData.mode}
@@ -606,7 +620,9 @@ const EditEvent = () => {
 
               {(eventData.mode === 'offline' || eventData.mode === 'hybrid') && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Venue / Physical Location</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Venue / Physical Location
+                  </label>
                   <input
                     type="text"
                     name="venue"
@@ -621,7 +637,9 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Total Seats (Max Teams/Individuals)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Total Seats (Max Teams/Individuals)
+                  </label>
                   <input
                     type="number"
                     name="totalSeats"
@@ -633,7 +651,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Tags (Comma Separated)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Tags (Comma Separated)
+                  </label>
                   <input
                     type="text"
                     name="tags"
@@ -646,7 +666,9 @@ const EditEvent = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Short Description (Max 150 chars)</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Short Description (Max 150 chars)
+                </label>
                 <input
                   type="text"
                   name="shortDesc"
@@ -660,7 +682,9 @@ const EditEvent = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Detailed Overview & Guidelines</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Detailed Overview & Guidelines
+                </label>
                 <textarea
                   name="detailedDesc"
                   rows="5"
@@ -681,21 +705,26 @@ const EditEvent = () => {
                   onChange={handleInputChange}
                   className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                 />
-                <label htmlFor="isPublic" className="text-xs font-semibold text-[#afacca] cursor-pointer select-none">
+                <label
+                  htmlFor="isPublic"
+                  className="text-xs font-semibold text-[#afacca] cursor-pointer select-none"
+                >
                   Make event public (Visible to all users immediately)
                 </label>
               </div>
 
               {/* Project Submission Toggles */}
               <div className="pt-4 border-t border-[rgba(175,172,202,0.1)]">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca] mb-2 block">Project Submission Requirements</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca] mb-2 block">
+                  Project Submission Requirements
+                </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-[rgba(8,7,13,0.5)] border border-[rgba(175,172,202,0.1)] rounded-xl">
                   {[
                     { name: 'githubLink', label: 'GitHub Repository' },
                     { name: 'demoVideo', label: 'YouTube Video Demo' },
                     { name: 'presentationLink', label: 'Slide Deck / PPT' },
-                    { name: 'description', label: 'Project Description' }
-                  ].map(req => (
+                    { name: 'description', label: 'Project Description' },
+                  ].map((req) => (
                     <div key={req.name} className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -705,7 +734,10 @@ const EditEvent = () => {
                         onChange={handleSubmissionRequirementsChange}
                         className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                       />
-                      <label htmlFor={`req-${req.name}`} className="text-xs text-[#afacca] cursor-pointer select-none">
+                      <label
+                        htmlFor={`req-${req.name}`}
+                        className="text-xs text-[#afacca] cursor-pointer select-none"
+                      >
                         {req.label}
                       </label>
                     </div>
@@ -718,11 +750,15 @@ const EditEvent = () => {
           {/* TAB 2: TIMELINES */}
           {activeTab === 'timeline' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Distinct Phases</h3>
-              
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Distinct Phases
+              </h3>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Registration Opens</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Registration Opens
+                  </label>
                   <input
                     type="datetime-local"
                     name="registrationStart"
@@ -732,7 +768,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Registration Closes</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Registration Closes
+                  </label>
                   <input
                     type="datetime-local"
                     name="registrationEnd"
@@ -746,7 +784,9 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Idea/Abstract Submission Deadline</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Idea/Abstract Submission Deadline
+                  </label>
                   <input
                     type="datetime-local"
                     name="ideaSubmissionEnd"
@@ -757,13 +797,19 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Shortlist Announcement Date</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Shortlist Announcement Date
+                  </label>
                   <input
                     type="datetime-local"
                     name="shortlistAnnouncement"
                     value={eventData.shortlistAnnouncement}
                     onChange={handleInputChange}
-                    min={eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                    min={
+                      eventData.ideaSubmissionEnd ||
+                      eventData.registrationEnd ||
+                      eventData.registrationStart
+                    }
                     className="input-field text-sm"
                   />
                 </div>
@@ -771,37 +817,61 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hacking Coding Start</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Hacking Coding Start
+                  </label>
                   <input
                     type="datetime-local"
                     name="hackingStart"
                     value={eventData.hackingStart}
                     onChange={handleInputChange}
-                    min={eventData.shortlistAnnouncement || eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                    min={
+                      eventData.shortlistAnnouncement ||
+                      eventData.ideaSubmissionEnd ||
+                      eventData.registrationEnd ||
+                      eventData.registrationStart
+                    }
                     className="input-field text-sm"
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hacking Coding Freeze</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Hacking Coding Freeze
+                  </label>
                   <input
                     type="datetime-local"
                     name="hackingEnd"
                     value={eventData.hackingEnd}
                     onChange={handleInputChange}
-                    min={eventData.hackingStart || eventData.shortlistAnnouncement || eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                    min={
+                      eventData.hackingStart ||
+                      eventData.shortlistAnnouncement ||
+                      eventData.ideaSubmissionEnd ||
+                      eventData.registrationEnd ||
+                      eventData.registrationStart
+                    }
                     className="input-field text-sm"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Judging & Valedictory Slot</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Judging & Valedictory Slot
+                </label>
                 <input
                   type="datetime-local"
                   name="judgingValedictory"
                   value={eventData.judgingValedictory}
                   onChange={handleInputChange}
-                  min={eventData.hackingEnd || eventData.hackingStart || eventData.shortlistAnnouncement || eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                  min={
+                    eventData.hackingEnd ||
+                    eventData.hackingStart ||
+                    eventData.shortlistAnnouncement ||
+                    eventData.ideaSubmissionEnd ||
+                    eventData.registrationEnd ||
+                    eventData.registrationStart
+                  }
                   className="input-field text-sm"
                 />
               </div>
@@ -809,7 +879,9 @@ const EditEvent = () => {
               {/* Mentoring Rounds Section */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Mentoring Rounds Checkpoints</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Mentoring Rounds Checkpoints
+                  </h4>
                   <button
                     type="button"
                     onClick={addMentoringRound}
@@ -820,20 +892,33 @@ const EditEvent = () => {
                 </div>
 
                 {eventData.mentoringRounds.map((round, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end">
-                    <div className="w-12 text-center text-xs font-bold text-[#afacca]">Round {idx + 1}</div>
+                  <div
+                    key={idx}
+                    className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end"
+                  >
+                    <div className="w-12 text-center text-xs font-bold text-[#afacca]">
+                      Round {idx + 1}
+                    </div>
                     <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Date & Time</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Date & Time
+                      </label>
                       <input
                         type="datetime-local"
                         value={round.time}
                         onChange={(e) => handleMentoringChange(idx, 'time', e.target.value)}
-                        min={idx > 0 ? eventData.mentoringRounds[idx - 1].time : (eventData.hackingStart || eventData.registrationStart)}
+                        min={
+                          idx > 0
+                            ? eventData.mentoringRounds[idx - 1].time
+                            : eventData.hackingStart || eventData.registrationStart
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
                     <div className="flex-[2] flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Details / Focus</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Details / Focus
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Design review, Architecture check"
@@ -852,18 +937,21 @@ const EditEvent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           )}
 
           {/* TAB 3: TRACKS & PROBLEMS */}
           {activeTab === 'tracks' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Tracks & Problem Statements</h3>
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Tracks & Problem Statements
+              </h3>
 
               {/* Tracks Tags */}
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Domain Tracks / Categories</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Domain Tracks / Categories
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -881,11 +969,14 @@ const EditEvent = () => {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2">
-                  {eventData.tracks.map(tag => (
-                    <span key={tag} className="flex items-center gap-1 text-xs bg-[#595388]/30 px-3 py-1 rounded-full border border-[#595388]/50">
+                  {eventData.tracks.map((tag) => (
+                    <span
+                      key={tag}
+                      className="flex items-center gap-1 text-xs bg-[#595388]/30 px-3 py-1 rounded-full border border-[#595388]/50"
+                    >
                       {tag}
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => removeTrackTag(tag)}
                         className="text-red-400 hover:text-red-300 ml-1 font-bold"
                       >
@@ -894,7 +985,9 @@ const EditEvent = () => {
                     </span>
                   ))}
                   {eventData.tracks.length === 0 && (
-                    <p className="text-xs text-[#afacca] italic">No tracks added. Type a track and click "Add Track".</p>
+                    <p className="text-xs text-[#afacca] italic">
+                      No tracks added. Type a track and click "Add Track".
+                    </p>
                   )}
                 </div>
               </div>
@@ -902,7 +995,9 @@ const EditEvent = () => {
               {/* Custom Problem Statements */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Specific Problem Statements</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Specific Problem Statements
+                  </h4>
                   <button
                     type="button"
                     onClick={addProblemStatement}
@@ -913,7 +1008,10 @@ const EditEvent = () => {
                 </div>
 
                 {eventData.customProblemStatements.map((prob, idx) => (
-                  <div key={idx} className="space-y-3 p-4 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative">
+                  <div
+                    key={idx}
+                    className="space-y-3 p-4 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative"
+                  >
                     <button
                       type="button"
                       onClick={() => removeProblemStatement(idx)}
@@ -921,10 +1019,12 @@ const EditEvent = () => {
                     >
                       <Trash2 size={16} />
                     </button>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
-                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Statement Title</label>
+                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                          Statement Title
+                        </label>
                         <input
                           type="text"
                           placeholder="e.g. Decentralized Identity Verification"
@@ -934,7 +1034,9 @@ const EditEvent = () => {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Sponsor/Issuer</label>
+                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                          Sponsor/Issuer
+                        </label>
                         <input
                           type="text"
                           placeholder="e.g. Coinbase or College Dept"
@@ -946,7 +1048,9 @@ const EditEvent = () => {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Detailed Description</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Detailed Description
+                      </label>
                       <textarea
                         rows="2"
                         placeholder="Detailed requirements, criteria, resources..."
@@ -958,18 +1062,21 @@ const EditEvent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           )}
 
           {/* TAB 4: PRIZES & JUDGING */}
           {activeTab === 'prizes' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Prizes & Judging Rubric</h3>
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Prizes & Judging Rubric
+              </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Total Cash Pool (INR)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Total Cash Pool (INR)
+                  </label>
                   <input
                     type="number"
                     name="totalPrizePool"
@@ -979,7 +1086,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">First Place Reward</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    First Place Reward
+                  </label>
                   <input
                     type="text"
                     name="firstPlace"
@@ -993,7 +1102,9 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Second Place Reward</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Second Place Reward
+                  </label>
                   <input
                     type="text"
                     name="secondPlace"
@@ -1003,7 +1114,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Third Place Reward</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Third Place Reward
+                  </label>
                   <input
                     type="text"
                     name="thirdPlace"
@@ -1016,14 +1129,16 @@ const EditEvent = () => {
 
               {/* Swag checkboxes */}
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Participant Perks & Swag</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Participant Perks & Swag
+                </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-[rgba(8,7,13,0.5)] border border-[rgba(175,172,202,0.1)] rounded-xl">
                   {[
                     { name: 'tshirts', label: 'Event T-Shirts' },
                     { name: 'meals', label: 'Free Meals/Drinks' },
                     { name: 'cloudCredits', label: 'Cloud API Credits' },
-                    { name: 'certificates', label: 'Participation Certificates' }
-                  ].map(swag => (
+                    { name: 'certificates', label: 'Participation Certificates' },
+                  ].map((swag) => (
                     <div key={swag.name} className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -1033,7 +1148,10 @@ const EditEvent = () => {
                         onChange={handleSwagChange}
                         className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                       />
-                      <label htmlFor={`swag-${swag.name}`} className="text-xs text-[#afacca] cursor-pointer select-none">
+                      <label
+                        htmlFor={`swag-${swag.name}`}
+                        className="text-xs text-[#afacca] cursor-pointer select-none"
+                      >
                         {swag.label}
                       </label>
                     </div>
@@ -1044,7 +1162,9 @@ const EditEvent = () => {
               {/* Special Categories */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Special Prize Categories</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Special Prize Categories
+                  </h4>
                   <button
                     type="button"
                     onClick={addSpecialPrize}
@@ -1055,24 +1175,35 @@ const EditEvent = () => {
                 </div>
 
                 {eventData.specialCategories.map((cat, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end">
+                  <div
+                    key={idx}
+                    className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end"
+                  >
                     <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Category Name</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Category Name
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Best Social Hack"
                         value={cat.categoryName}
-                        onChange={(e) => handleSpecialPrizeChange(idx, 'categoryName', e.target.value)}
+                        onChange={(e) =>
+                          handleSpecialPrizeChange(idx, 'categoryName', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
                     <div className="flex-[2] flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Reward Details</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Reward Details
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. iPad Mini or Sponsor Swag Box"
                         value={cat.prizeDescription}
-                        onChange={(e) => handleSpecialPrizeChange(idx, 'prizeDescription', e.target.value)}
+                        onChange={(e) =>
+                          handleSpecialPrizeChange(idx, 'prizeDescription', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
@@ -1090,7 +1221,9 @@ const EditEvent = () => {
               {/* Judging Criteria */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Judging Rubric (Total Weightage must be 100%)</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Judging Rubric (Total Weightage must be 100%)
+                  </h4>
                   <button
                     type="button"
                     onClick={addJudgingCriteria}
@@ -1101,25 +1234,36 @@ const EditEvent = () => {
                 </div>
 
                 {eventData.judgingCriteria.map((crit, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end">
+                  <div
+                    key={idx}
+                    className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end"
+                  >
                     <div className="flex-[3] flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Criteria / Dimension</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Criteria / Dimension
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Technical Complexity, Pitch, Design"
                         value={crit.criteriaName}
-                        onChange={(e) => handleJudgingCriteriaChange(idx, 'criteriaName', e.target.value)}
+                        onChange={(e) =>
+                          handleJudgingCriteriaChange(idx, 'criteriaName', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Weightage (%)</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Weightage (%)
+                      </label>
                       <input
                         type="number"
                         min="0"
                         max="100"
                         value={crit.weightage}
-                        onChange={(e) => handleJudgingCriteriaChange(idx, 'weightage', e.target.value)}
+                        onChange={(e) =>
+                          handleJudgingCriteriaChange(idx, 'weightage', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
@@ -1139,11 +1283,15 @@ const EditEvent = () => {
           {/* TAB 5: ELIGIBILITY & FAQ */}
           {activeTab === 'logistics' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Eligibility & Logistics</h3>
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Eligibility & Logistics
+              </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Institution Policy</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Institution Policy
+                  </label>
                   <select
                     name="institutionPolicy"
                     value={eventData.institutionPolicy}
@@ -1155,11 +1303,18 @@ const EditEvent = () => {
                   </select>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Inter-College Teams</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Inter-College Teams
+                  </label>
                   <select
                     name="interCollegeTeams"
                     value={eventData.interCollegeTeams}
-                    onChange={(e) => setEventData(prev => ({ ...prev, interCollegeTeams: e.target.value === 'true' }))}
+                    onChange={(e) =>
+                      setEventData((prev) => ({
+                        ...prev,
+                        interCollegeTeams: e.target.value === 'true',
+                      }))
+                    }
                     className="input-field text-sm bg-[#08070d]"
                   >
                     <option value="true">Allowed (Members can be from different schools)</option>
@@ -1170,7 +1325,9 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Min Team Size</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Min Team Size
+                  </label>
                   <input
                     type="number"
                     name="minTeamSize"
@@ -1181,7 +1338,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Max Team Size</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Max Team Size
+                  </label>
                   <input
                     type="number"
                     name="maxTeamSize"
@@ -1195,7 +1354,9 @@ const EditEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Discord Server Invite</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Discord Server Invite
+                  </label>
                   <input
                     type="text"
                     name="discordInvite"
@@ -1206,7 +1367,9 @@ const EditEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">WhatsApp Group Invite</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    WhatsApp Group Invite
+                  </label>
                   <input
                     type="text"
                     name="whatsappInvite"
@@ -1221,7 +1384,9 @@ const EditEvent = () => {
               {/* FAQs */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Frequently Asked Questions</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Frequently Asked Questions
+                  </h4>
                   <button
                     type="button"
                     onClick={addFaq}
@@ -1232,7 +1397,10 @@ const EditEvent = () => {
                 </div>
 
                 {eventData.faqs.map((faq, idx) => (
-                  <div key={idx} className="space-y-3 p-4 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative">
+                  <div
+                    key={idx}
+                    className="space-y-3 p-4 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative"
+                  >
                     <button
                       type="button"
                       onClick={() => removeFaq(idx)}
@@ -1241,7 +1409,9 @@ const EditEvent = () => {
                       <Trash2 size={16} />
                     </button>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Question</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Question
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Who can participate?"
@@ -1251,7 +1421,9 @@ const EditEvent = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Answer</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Answer
+                      </label>
                       <textarea
                         rows="2"
                         placeholder="Provide a clear, detailed answer..."
@@ -1290,7 +1462,6 @@ const EditEvent = () => {
               )}
             </button>
           </div>
-          
         </form>
       </div>
     </div>
