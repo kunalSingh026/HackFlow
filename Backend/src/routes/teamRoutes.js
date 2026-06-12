@@ -2,23 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    createTeam,
-    requestToJoin,
-    approveJoinRequest,
-    getAvailableParticipants,
-    inviteUserToTeam,
-    acceptInvite,
-    leaveTeam,
-    removeMember,
-    disbandTeam,
-    submitProject,
-    getMyTeam,
-    getMyInvitations,
-    rejectInvite
+  createTeam,
+  requestToJoin,
+  approveJoinRequest,
+  getAvailableParticipants,
+  inviteUserToTeam,
+  acceptInvite,
+  leaveTeam,
+  removeMember,
+  disbandTeam,
+  submitProject,
+  getMyTeam,
+  getMyInvitations,
+  rejectInvite,
 } = require('../controllers/teamController');
 
 const { submitEvaluation } = require('../controllers/evaluationController');
-
 
 const { protect } = require('../middleware/authMiddleware');
 

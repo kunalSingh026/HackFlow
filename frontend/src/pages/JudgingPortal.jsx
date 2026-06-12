@@ -14,7 +14,7 @@ import {
   ChevronLeft,
   MessageSquare,
   Sparkles,
-  X
+  X,
 } from 'lucide-react';
 
 const Github = ({ size = 24, className = '', ...props }) => (
@@ -83,7 +83,7 @@ const JudgingPortal = () => {
     // Prepopulate scores if already graded
     if (team.isGraded && team.grade && Array.isArray(team.grade.scores)) {
       const initialScores = {};
-      team.grade.scores.forEach(s => {
+      team.grade.scores.forEach((s) => {
         initialScores[s.criteriaName] = s.score;
       });
       setScores(initialScores);
@@ -91,8 +91,9 @@ const JudgingPortal = () => {
     } else {
       // Default all criteria to 5/10
       const defaultScores = {};
-      const activeCriteria = criteria.length > 0 ? criteria : [{ criteriaName: "Overall Quality", weightage: 100 }];
-      activeCriteria.forEach(c => {
+      const activeCriteria =
+        criteria.length > 0 ? criteria : [{ criteriaName: 'Overall Quality', weightage: 100 }];
+      activeCriteria.forEach((c) => {
         defaultScores[c.criteriaName] = 5;
       });
       setScores(defaultScores);
@@ -101,9 +102,9 @@ const JudgingPortal = () => {
   };
 
   const handleScoreChange = (criteriaName, value) => {
-    setScores(prev => ({
+    setScores((prev) => ({
       ...prev,
-      [criteriaName]: parseFloat(value)
+      [criteriaName]: parseFloat(value),
     }));
   };
 
@@ -111,9 +112,10 @@ const JudgingPortal = () => {
   const calculateLiveWeightedScore = () => {
     let totalWeighted = 0;
     let totalWeight = 0;
-    const activeCriteria = criteria.length > 0 ? criteria : [{ criteriaName: "Overall Quality", weightage: 100 }];
+    const activeCriteria =
+      criteria.length > 0 ? criteria : [{ criteriaName: 'Overall Quality', weightage: 100 }];
 
-    activeCriteria.forEach(c => {
+    activeCriteria.forEach((c) => {
       const score = scores[c.criteriaName] ?? 5;
       totalWeighted += score * c.weightage;
       totalWeight += c.weightage;
@@ -128,9 +130,9 @@ const JudgingPortal = () => {
     if (!gradingTeam) return;
 
     // Convert scores object to format expected by backend
-    const scoresArray = Object.keys(scores).map(name => ({
+    const scoresArray = Object.keys(scores).map((name) => ({
       criteriaName: name,
-      score: scores[name]
+      score: scores[name],
     }));
 
     try {
@@ -138,7 +140,7 @@ const JudgingPortal = () => {
       setError('');
       const res = await api.post(`/teams/${gradingTeam._id}/evaluate`, {
         scores: scoresArray,
-        feedback
+        feedback,
       });
 
       setGradeSuccess('Evaluation submitted successfully!');
@@ -156,15 +158,15 @@ const JudgingPortal = () => {
 
   // Metrics
   const totalSubmissions = submissions.length;
-  const gradedCount = submissions.filter(s => s.isGraded).length;
+  const gradedCount = submissions.filter((s) => s.isGraded).length;
   const pendingCount = totalSubmissions - gradedCount;
-  const progressPercent = totalSubmissions > 0 ? Math.round((gradedCount / totalSubmissions) * 100) : 0;
+  const progressPercent =
+    totalSubmissions > 0 ? Math.round((gradedCount / totalSubmissions) * 100) : 0;
   const isLocked = eventStatus === 'completed';
 
   return (
     <div className="min-h-screen bg-[#08070d] text-[#f7f6f0] p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-8">
-
         {/* Back navigation & Title */}
         <div className="space-y-4">
           <button
@@ -179,9 +181,13 @@ const JudgingPortal = () => {
             <div>
               <div className="flex items-center gap-3 mb-1">
                 <Gavel className="text-[#afacca]" size={24} />
-                <h1 className="font-display text-3xl font-bold tracking-tight">Judging<span className="text-[#595388]">.</span>Portal</h1>
+                <h1 className="font-display text-3xl font-bold tracking-tight">
+                  Judging<span className="text-[#595388]">.</span>Portal
+                </h1>
               </div>
-              <p className="text-sm text-[#afacca]">Assess hackathon projects, input metrics, and submit evaluations</p>
+              <p className="text-sm text-[#afacca]">
+                Assess hackathon projects, input metrics, and submit evaluations
+              </p>
             </div>
             {isLocked && (
               <span className="flex items-center gap-1.5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-red-400">
@@ -208,16 +214,28 @@ const JudgingPortal = () => {
             {/* Tracking Dashboard */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
-                <p className="text-[10px] uppercase tracking-widest text-[#afacca] font-bold">Total Submissions</p>
-                <h2 className="text-3xl font-display font-bold text-white mt-2">{totalSubmissions}</h2>
+                <p className="text-[10px] uppercase tracking-widest text-[#afacca] font-bold">
+                  Total Submissions
+                </p>
+                <h2 className="text-3xl font-display font-bold text-white mt-2">
+                  {totalSubmissions}
+                </h2>
               </div>
               <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
-                <p className="text-[10px] uppercase tracking-widest text-green-400 font-bold">Evaluated</p>
-                <h2 className="text-3xl font-display font-bold text-green-400 mt-2">{gradedCount}</h2>
+                <p className="text-[10px] uppercase tracking-widest text-green-400 font-bold">
+                  Evaluated
+                </p>
+                <h2 className="text-3xl font-display font-bold text-green-400 mt-2">
+                  {gradedCount}
+                </h2>
               </div>
               <div className="glass-card p-5 rounded-2xl flex flex-col justify-between">
-                <p className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">Pending</p>
-                <h2 className="text-3xl font-display font-bold text-amber-400 mt-2">{pendingCount}</h2>
+                <p className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">
+                  Pending
+                </p>
+                <h2 className="text-3xl font-display font-bold text-amber-400 mt-2">
+                  {pendingCount}
+                </h2>
               </div>
               <div className="glass-card p-5 rounded-2xl flex flex-col justify-between border-[rgba(175,172,202,0.2)]">
                 <div className="flex justify-between items-center text-[10px] text-[#afacca] font-bold uppercase tracking-widest">
@@ -225,7 +243,7 @@ const JudgingPortal = () => {
                   <span>{progressPercent}%</span>
                 </div>
                 <div className="w-full bg-[#595388]/10 h-3 rounded-full overflow-hidden mt-3 border border-white/[0.03]">
-                  <div 
+                  <div
                     className="bg-gradient-to-r from-[#595388] to-[#afacca] h-full rounded-full transition-all duration-500"
                     style={{ width: `${progressPercent}%` }}
                   />
@@ -242,27 +260,33 @@ const JudgingPortal = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {submissions.map(team => {
+                  {submissions.map((team) => {
                     const isGraded = team.isGraded;
                     return (
-                      <div 
-                        key={team._id} 
+                      <div
+                        key={team._id}
                         className={`glass-card rounded-2xl p-6 flex flex-col justify-between border ${
-                          isGraded 
-                            ? 'border-green-500/20 shadow-lg shadow-green-950/5' 
+                          isGraded
+                            ? 'border-green-500/20 shadow-lg shadow-green-950/5'
                             : 'border-[rgba(175,172,202,0.12)]'
                         } hover:border-[#595388]/40 transition-all duration-300 relative group`}
                       >
                         <div className="space-y-4">
                           <div className="flex justify-between items-start">
-                            <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                              isGraded 
-                                ? 'bg-green-500/15 text-green-400 border border-green-500/20' 
-                                : 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
-                            }`}>
-                              {isGraded ? `Graded: ${Math.round(team.grade?.totalScore)}/100` : 'Pending Score'}
+                            <span
+                              className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                                isGraded
+                                  ? 'bg-green-500/15 text-green-400 border border-green-500/20'
+                                  : 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
+                              }`}
+                            >
+                              {isGraded
+                                ? `Graded: ${Math.round(team.grade?.totalScore)}/100`
+                                : 'Pending Score'}
                             </span>
-                            <span className="text-[10px] text-[#afacca] font-mono">#{team.joinCode}</span>
+                            <span className="text-[10px] text-[#afacca] font-mono">
+                              #{team.joinCode}
+                            </span>
                           </div>
 
                           <div>
@@ -276,9 +300,11 @@ const JudgingPortal = () => {
 
                           {/* Member List */}
                           <div className="space-y-1">
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]/80">Team members</span>
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]/80">
+                              Team members
+                            </span>
                             <div className="flex flex-wrap gap-1 text-[10px] text-[#afacca]">
-                              {team.members?.map(m => (
+                              {team.members?.map((m) => (
                                 <span key={m._id} className="bg-white/5 px-2 py-0.5 rounded">
                                   {m.firstName} {m.lastName}
                                 </span>
@@ -289,10 +315,10 @@ const JudgingPortal = () => {
                           {/* Project Submission Links */}
                           <div className="flex gap-2 pt-2 text-[#afacca]">
                             {team.project?.githubLink && (
-                              <a 
-                                href={team.project.githubLink} 
-                                target="_blank" 
-                                rel="noreferrer" 
+                              <a
+                                href={team.project.githubLink}
+                                target="_blank"
+                                rel="noreferrer"
                                 className="p-2 rounded-xl bg-white/5 hover:bg-white/10 hover:text-white transition-all"
                                 title="GitHub Repository"
                               >
@@ -300,10 +326,10 @@ const JudgingPortal = () => {
                               </a>
                             )}
                             {team.project?.demoVideo && (
-                              <a 
-                                href={team.project.demoVideo} 
-                                target="_blank" 
-                                rel="noreferrer" 
+                              <a
+                                href={team.project.demoVideo}
+                                target="_blank"
+                                rel="noreferrer"
                                 className="p-2 rounded-xl bg-white/5 hover:bg-white/10 hover:text-white transition-all"
                                 title="Demo Video Link"
                               >
@@ -311,10 +337,10 @@ const JudgingPortal = () => {
                               </a>
                             )}
                             {team.project?.presentationLink && (
-                              <a 
-                                href={team.project.presentationLink} 
-                                target="_blank" 
-                                rel="noreferrer" 
+                              <a
+                                href={team.project.presentationLink}
+                                target="_blank"
+                                rel="noreferrer"
                                 className="p-2 rounded-xl bg-white/5 hover:bg-white/10 hover:text-white transition-all"
                                 title="Presentation Slides"
                               >
@@ -337,7 +363,11 @@ const JudgingPortal = () => {
                             }`}
                           >
                             <Sliders size={12} />
-                            {isLocked ? 'View Grade Details' : isGraded ? 'Edit Evaluation' : 'Score Project'}
+                            {isLocked
+                              ? 'View Grade Details'
+                              : isGraded
+                                ? 'Edit Evaluation'
+                                : 'Score Project'}
                           </button>
                         </div>
                       </div>
@@ -380,18 +410,29 @@ const JudgingPortal = () => {
               )}
 
               <form onSubmit={handleSubmitEvaluation} className="space-y-6">
-                
                 {/* Dynamically Map Criteria */}
                 <div className="space-y-5">
-                  <p className="text-xs text-[#afacca] font-bold uppercase tracking-wider text-[10px]">Judging Criteria Dimensions</p>
-                  
-                  {(criteria.length > 0 ? criteria : [{ criteriaName: "Overall Quality", weightage: 100 }]).map(crit => {
+                  <p className="text-xs text-[#afacca] font-bold uppercase tracking-wider text-[10px]">
+                    Judging Criteria Dimensions
+                  </p>
+
+                  {(criteria.length > 0
+                    ? criteria
+                    : [{ criteriaName: 'Overall Quality', weightage: 100 }]
+                  ).map((crit) => {
                     const score = scores[crit.criteriaName] ?? 5;
                     return (
-                      <div key={crit.criteriaName} className="space-y-2 p-4 rounded-xl bg-black/30 border border-white/[0.03]">
+                      <div
+                        key={crit.criteriaName}
+                        className="space-y-2 p-4 rounded-xl bg-black/30 border border-white/[0.03]"
+                      >
                         <div className="flex justify-between items-center">
-                          <span className="text-xs font-semibold text-white">{crit.criteriaName}</span>
-                          <span className="text-[10px] text-[#afacca] font-mono font-bold">Weightage: {crit.weightage}%</span>
+                          <span className="text-xs font-semibold text-white">
+                            {crit.criteriaName}
+                          </span>
+                          <span className="text-[10px] text-[#afacca] font-mono font-bold">
+                            Weightage: {crit.weightage}%
+                          </span>
                         </div>
                         <div className="flex gap-4 items-center">
                           <input
@@ -416,7 +457,9 @@ const JudgingPortal = () => {
                 {/* Score Output & Calculator */}
                 <div className="p-4 rounded-xl bg-[#595388]/10 border border-[rgba(175,172,202,0.15)] flex justify-between items-center">
                   <div>
-                    <span className="text-[10px] text-[#afacca] uppercase block font-bold">Calculated Score</span>
+                    <span className="text-[10px] text-[#afacca] uppercase block font-bold">
+                      Calculated Score
+                    </span>
                     <span className="text-xs text-white">Weighted dynamic sum</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -467,7 +510,6 @@ const JudgingPortal = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

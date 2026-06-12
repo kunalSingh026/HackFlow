@@ -1,20 +1,22 @@
 const nodemailer = require('nodemailer');
 
-const sendLeaderboardEmail = async(options) => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.SMTP_PORT) || 465,
-        secure: process.env.SMTP_SECURE === 'true' || (!process.env.SMTP_SECURE && (parseInt(process.env.SMTP_PORT) || 465) === 465),
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: process.env.NODE_ENV === 'production'
-        }
-    });
+const sendLeaderboardEmail = async (options) => {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT) || 465,
+    secure:
+      process.env.SMTP_SECURE === 'true' ||
+      (!process.env.SMTP_SECURE && (parseInt(process.env.SMTP_PORT) || 465) === 465),
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: process.env.NODE_ENV === 'production',
+    },
+  });
 
-    const htmlTemplate = `
+  const htmlTemplate = `
     <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #08070d; color: #f7f6f0; padding: 40px 20px; text-align: center;">
         <div style="max-width: 600px; margin: 0 auto; background: rgba(89, 83, 136, 0.1); border: 1px solid rgba(175, 172, 202, 0.2); border-radius: 20px; padding: 40px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <div style="margin-bottom: 20px;">
@@ -42,14 +44,14 @@ const sendLeaderboardEmail = async(options) => {
     </div>
     `;
 
-    const mailOptions = {
-        from: 'HackFlow Team <noreply@hackflow.com>',
-        to: options.email,
-        subject: `🏆 Results are Live for ${options.eventTitle}!`,
-        html: htmlTemplate
-    };
+  const mailOptions = {
+    from: 'HackFlow Team <noreply@hackflow.com>',
+    to: options.email,
+    subject: `🏆 Results are Live for ${options.eventTitle}!`,
+    html: htmlTemplate,
+  };
 
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendLeaderboardEmail;

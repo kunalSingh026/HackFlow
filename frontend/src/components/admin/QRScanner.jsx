@@ -11,7 +11,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
   const [processing, setProcessing] = useState(false);
 
   const scannerRef = useRef(null);
-  const scannerId = "qr-reader-element";
+  const scannerId = 'qr-reader-element';
 
   useEffect(() => {
     // Initialize html5QrCode instance
@@ -23,7 +23,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
 
     return () => {
       if (html5QrCode.isScanning) {
-        html5QrCode.stop().catch(err => console.error("Clean up stop error:", err));
+        html5QrCode.stop().catch((err) => console.error('Clean up stop error:', err));
       }
     };
   }, []);
@@ -35,13 +35,13 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
 
     try {
       await scannerInstance.start(
-        { facingMode: "environment" },
+        { facingMode: 'environment' },
         {
           fps: 10,
           qrbox: (width, height) => {
             const size = Math.min(width, height) * 0.7;
             return { width: size, height: size };
-          }
+          },
         },
         onScanSuccess,
         (errorMessage) => {
@@ -51,7 +51,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
       setIsScanning(true);
     } catch (err) {
       console.error(err);
-      setErrorMsg("Camera access failed. Ensure permission is granted.");
+      setErrorMsg('Camera access failed. Ensure permission is granted.');
       setIsScanning(false);
     }
   };
@@ -62,7 +62,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
         await scannerRef.current.stop();
         setIsScanning(false);
       } catch (err) {
-        console.error("Stop scanning error:", err);
+        console.error('Stop scanning error:', err);
       }
     }
   };
@@ -87,7 +87,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
       if (!registrationId) {
         setScanResult({
           status: 'error',
-          message: 'Invalid Ticket or Unauthorized Event.'
+          message: 'Invalid Ticket or Unauthorized Event.',
         });
         setProcessing(false);
         return;
@@ -98,7 +98,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
       if (targetEventId !== activeEventId) {
         setScanResult({
           status: 'error',
-          message: 'Invalid Ticket or Unauthorized Event.'
+          message: 'Invalid Ticket or Unauthorized Event.',
         });
         setProcessing(false);
         return;
@@ -112,24 +112,27 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
         setScanResult({
           status: 'success',
           message: `Hacker ${response.data.attendee.name} Verified & Checked In.`,
-          name: response.data.attendee.name
+          name: response.data.attendee.name,
         });
       }
     } catch (err) {
       console.error(err);
       const errMsg = err.response?.data?.message || '';
-      
-      if (errMsg.includes('already checked in') || err.response?.status === 400 && errMsg.includes('WARNING')) {
+
+      if (
+        errMsg.includes('already checked in') ||
+        (err.response?.status === 400 && errMsg.includes('WARNING'))
+      ) {
         // Warning: already scanned
         setScanResult({
           status: 'warning',
-          message: 'Alert: Ticket Already Scanned.'
+          message: 'Alert: Ticket Already Scanned.',
         });
       } else {
         // Error: invalid or mismatch
         setScanResult({
           status: 'error',
-          message: 'Invalid Ticket or Unauthorized Event.'
+          message: 'Invalid Ticket or Unauthorized Event.',
         });
       }
     } finally {
@@ -144,15 +147,14 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
       <div className="relative w-full max-w-md bg-[#08070d] border border-[rgba(175,172,202,0.15)] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
-        
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[rgba(175,172,202,0.1)]">
           <div className="flex items-center gap-2">
             <Camera className="text-[#afacca]" size={18} />
             <span className="font-display font-bold text-[#f7f6f0]">Check-In Scanner</span>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-1.5 rounded-lg border border-[rgba(175,172,202,0.1)] bg-[#595388]/10 hover:bg-[#595388]/20 transition-all text-[#afacca] hover:text-white"
           >
             <X size={16} />
@@ -175,8 +177,10 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
             }}
             className="input-field text-xs bg-[#08070d] py-1.5 w-full pr-10"
           >
-            {hostedEvents.map(e => (
-              <option key={e._id} value={e._id}>{e.title}</option>
+            {hostedEvents.map((e) => (
+              <option key={e._id} value={e._id}>
+                {e.title}
+              </option>
             ))}
           </select>
         </div>
@@ -184,9 +188,11 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
         {/* Scanner Body */}
         <div className="flex-1 p-6 flex flex-col items-center justify-center relative min-h-[300px]">
           {/* QR Viewfinder container */}
-          <div className={`w-full aspect-square max-w-[280px] rounded-xl overflow-hidden bg-black border border-[rgba(175,172,202,0.1)] relative ${!isScanning && 'opacity-40'}`}>
+          <div
+            className={`w-full aspect-square max-w-[280px] rounded-xl overflow-hidden bg-black border border-[rgba(175,172,202,0.1)] relative ${!isScanning && 'opacity-40'}`}
+          >
             <div id={scannerId} className="w-full h-full object-cover"></div>
-            
+
             {/* Viewfinder crosshairs */}
             {isScanning && (
               <div className="absolute inset-0 border-[2px] border-dashed border-[#afacca]/40 pointer-events-none rounded-xl m-4 animate-pulse"></div>
@@ -197,7 +203,7 @@ const QRScanner = ({ onClose, selectedEventId, hostedEvents }) => {
           {errorMsg && (
             <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/25 text-red-400 text-xs text-center">
               {errorMsg}
-              <button 
+              <button
                 onClick={() => startScanning()}
                 className="block mx-auto mt-2 text-white underline font-semibold"
               >

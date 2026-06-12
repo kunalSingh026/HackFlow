@@ -13,7 +13,7 @@ import {
   Home,
   ChevronRight,
   Medal,
-  Crown
+  Crown,
 } from 'lucide-react';
 
 const Github = ({ size = 24, className = '', ...props }) => (
@@ -84,13 +84,16 @@ const Leaderboard = () => {
 
   return (
     <div className="min-h-screen bg-[#08070d] text-[#f7f6f0] p-6 md:p-10 relative overflow-hidden">
-      
       {/* Ambient background glows */}
       <div className="ambient-glow glow-top-right" />
-      <div className="ambient-glow glow-bottom-left" style={{ background: 'radial-gradient(circle, rgba(89, 83, 136, 0.12) 0%, transparent 60%)' }} />
+      <div
+        className="ambient-glow glow-bottom-left"
+        style={{
+          background: 'radial-gradient(circle, rgba(89, 83, 136, 0.12) 0%, transparent 60%)',
+        }}
+      />
 
       <div className="max-w-6xl mx-auto space-y-8 relative z-10">
-        
         {/* Navigation header */}
         <div className="flex justify-between items-center border-b border-[rgba(175,172,202,0.1)] pb-4">
           <div className="space-y-1">
@@ -119,9 +122,9 @@ const Leaderboard = () => {
             <RefreshCw className="animate-spin text-[#afacca] mb-4" size={36} />
             <p className="text-sm text-[#afacca]">Calibrating rankings & evaluations...</p>
           </div>
-        ) : !isPublished && (user?.role !== 'admin') ? (
+        ) : !isPublished && user?.role !== 'admin' ? (
           /* Unpublished / Pending state */
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -130,14 +133,16 @@ const Leaderboard = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#595388]/10 to-transparent pointer-events-none" />
             <Clock className="mx-auto text-[#afacca] animate-pulse" size={64} />
             <div className="space-y-2 relative z-10">
-              <h2 className="font-display text-2xl font-bold text-white">Standby... Results are pending release</h2>
+              <h2 className="font-display text-2xl font-bold text-white">
+                Standby... Results are pending release
+              </h2>
               <p className="text-sm text-[#afacca] leading-relaxed max-w-md mx-auto">
-                The event organizer is currently finalizing scores and grading feedback. 
-                Rankings will go live immediately once published. Stay tuned!
+                The event organizer is currently finalizing scores and grading feedback. Rankings
+                will go live immediately once published. Stay tuned!
               </p>
             </div>
             <div className="pt-4 relative z-10">
-              <button 
+              <button
                 onClick={fetchLeaderboard}
                 className="rounded-xl bg-[#595388] hover:bg-[#6e67a7] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all shadow-md shadow-[#595388]/20"
               >
@@ -148,9 +153,8 @@ const Leaderboard = () => {
         ) : (
           /* Leaderboard Live View */
           <div className="space-y-12">
-            
             {/* Admin Preview Header notice */}
-            {!isPublished && (user?.role === 'admin') && (
+            {!isPublished && user?.role === 'admin' && (
               <div className="p-3 rounded-xl border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 text-xs text-center font-bold">
                 ⚠️ ADMIN CONTROL: Viewing PREVIEW standings before going live.
               </div>
@@ -160,7 +164,7 @@ const Leaderboard = () => {
             {podiumTeams.length > 0 && (
               <div className="flex flex-col items-center justify-center pt-8 space-y-2">
                 <div className="flex items-end justify-center w-full max-w-3xl gap-4 md:gap-8 px-4 h-80">
-                  {visualPodium.map(team => {
+                  {visualPodium.map((team) => {
                     const is1st = team.spot === 1;
                     const is2nd = team.spot === 2;
                     const is3rd = team.spot === 3;
@@ -178,9 +182,24 @@ const Leaderboard = () => {
                         {/* Team Info Card */}
                         <div className="text-center pb-3 space-y-1">
                           <div className="mx-auto flex justify-center mb-1">
-                            {is1st && <Crown className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] animate-bounce" size={28} />}
-                            {is2nd && <Medal className="text-slate-300 drop-shadow-[0_0_6px_rgba(203,213,225,0.4)]" size={24} />}
-                            {is3rd && <Medal className="text-amber-600 drop-shadow-[0_0_6px_rgba(217,119,6,0.4)]" size={22} />}
+                            {is1st && (
+                              <Crown
+                                className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] animate-bounce"
+                                size={28}
+                              />
+                            )}
+                            {is2nd && (
+                              <Medal
+                                className="text-slate-300 drop-shadow-[0_0_6px_rgba(203,213,225,0.4)]"
+                                size={24}
+                              />
+                            )}
+                            {is3rd && (
+                              <Medal
+                                className="text-amber-600 drop-shadow-[0_0_6px_rgba(217,119,6,0.4)]"
+                                size={22}
+                              />
+                            )}
                           </div>
                           <h3 className="font-display font-bold text-sm md:text-base text-white truncate px-1">
                             {team.teamName}
@@ -194,7 +213,7 @@ const Leaderboard = () => {
                         </div>
 
                         {/* Visual Pedestal */}
-                        <div 
+                        <div
                           className={`rounded-t-2xl flex flex-col items-center justify-between py-4 border-t ${
                             is1st
                               ? 'h-48 bg-gradient-to-b from-yellow-500/20 to-[#595388]/15 border-yellow-500/40 shadow-[0_0_30px_-5px_rgba(234,179,8,0.2)]'
@@ -203,21 +222,37 @@ const Leaderboard = () => {
                                 : 'h-28 bg-gradient-to-b from-amber-600/20 to-[#595388]/5 border-amber-600/20'
                           }`}
                         >
-                          <span className={`text-4xl font-display font-extrabold ${
-                            is1st ? 'text-yellow-400' : is2nd ? 'text-slate-300' : 'text-amber-600'
-                          }`}>
+                          <span
+                            className={`text-4xl font-display font-extrabold ${
+                              is1st
+                                ? 'text-yellow-400'
+                                : is2nd
+                                  ? 'text-slate-300'
+                                  : 'text-amber-600'
+                            }`}
+                          >
                             {team.spot}
                           </span>
-                          
+
                           {/* Links in Pedestal */}
                           <div className="flex gap-1.5 justify-center">
                             {team.projectDetails?.githubLink && (
-                              <a href={team.projectDetails.githubLink} target="_blank" rel="noreferrer" className="p-1 rounded bg-black/40 hover:bg-black/80 text-[#afacca] hover:text-white transition-all">
+                              <a
+                                href={team.projectDetails.githubLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="p-1 rounded bg-black/40 hover:bg-black/80 text-[#afacca] hover:text-white transition-all"
+                              >
                                 <Github size={11} />
                               </a>
                             )}
                             {team.projectDetails?.demoVideo && (
-                              <a href={team.projectDetails.demoVideo} target="_blank" rel="noreferrer" className="p-1 rounded bg-black/40 hover:bg-black/80 text-[#afacca] hover:text-white transition-all">
+                              <a
+                                href={team.projectDetails.demoVideo}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="p-1 rounded bg-black/40 hover:bg-black/80 text-[#afacca] hover:text-white transition-all"
+                              >
                                 <Video size={11} />
                               </a>
                             )}
@@ -249,24 +284,24 @@ const Leaderboard = () => {
                       {leaderboard.map((team, idx) => {
                         const isTop3 = idx < 3;
                         return (
-                          <tr 
-                            key={team.teamId} 
+                          <tr
+                            key={team.teamId}
                             className={`transition-all ${
-                              isTop3 
-                                ? 'bg-[#595388]/5 font-semibold' 
-                                : 'hover:bg-white/[0.01]'
+                              isTop3 ? 'bg-[#595388]/5 font-semibold' : 'hover:bg-white/[0.01]'
                             }`}
                           >
                             <td className="py-4 px-6">
-                              <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
-                                idx === 0 
-                                  ? 'bg-yellow-400 text-black font-extrabold'
-                                  : idx === 1
-                                    ? 'bg-slate-300 text-black'
-                                    : idx === 2
-                                      ? 'bg-amber-600 text-white'
-                                      : 'text-[#afacca]'
-                              }`}>
+                              <span
+                                className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
+                                  idx === 0
+                                    ? 'bg-yellow-400 text-black font-extrabold'
+                                    : idx === 1
+                                      ? 'bg-slate-300 text-black'
+                                      : idx === 2
+                                        ? 'bg-amber-600 text-white'
+                                        : 'text-[#afacca]'
+                                }`}
+                              >
                                 {idx + 1}
                               </span>
                             </td>
@@ -278,33 +313,54 @@ const Leaderboard = () => {
                                 </span>
                                 <div className="flex gap-1.5 flex-shrink-0">
                                   {team.projectDetails?.githubLink && (
-                                    <a href={team.projectDetails.githubLink} target="_blank" rel="noreferrer" className="text-[#afacca] hover:text-white transition-colors">
+                                    <a
+                                      href={team.projectDetails.githubLink}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-[#afacca] hover:text-white transition-colors"
+                                    >
                                       <Github size={12} />
                                     </a>
                                   )}
                                   {team.projectDetails?.demoVideo && (
-                                    <a href={team.projectDetails.demoVideo} target="_blank" rel="noreferrer" className="text-[#afacca] hover:text-white transition-colors">
+                                    <a
+                                      href={team.projectDetails.demoVideo}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-[#afacca] hover:text-white transition-colors"
+                                    >
                                       <Video size={12} />
                                     </a>
                                   )}
                                   {team.projectDetails?.presentationLink && (
-                                    <a href={team.projectDetails.presentationLink} target="_blank" rel="noreferrer" className="text-[#afacca] hover:text-white transition-colors">
+                                    <a
+                                      href={team.projectDetails.presentationLink}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-[#afacca] hover:text-white transition-colors"
+                                    >
                                       <FileText size={12} />
                                     </a>
                                   )}
                                 </div>
                               </div>
                             </td>
-                            <td className="py-4 px-6 text-center text-[#afacca]">{team.judgesCount}</td>
+                            <td className="py-4 px-6 text-center text-[#afacca]">
+                              {team.judgesCount}
+                            </td>
                             <td className="py-4 px-6 text-right font-bold text-yellow-400 font-mono">
-                              {team.averageScore} <span className="text-[10px] text-[#afacca] font-normal">/ 100</span>
+                              {team.averageScore}{' '}
+                              <span className="text-[10px] text-[#afacca] font-normal">/ 100</span>
                             </td>
                           </tr>
                         );
                       })}
                       {leaderboard.length === 0 && (
                         <tr>
-                          <td colSpan={5} className="py-8 text-center text-xs text-[#afacca] italic">
+                          <td
+                            colSpan={5}
+                            className="py-8 text-center text-xs text-[#afacca] italic"
+                          >
                             No ranked projects found.
                           </td>
                         </tr>
@@ -314,7 +370,6 @@ const Leaderboard = () => {
                 </div>
               </div>
             </div>
-
           </div>
         )}
       </div>

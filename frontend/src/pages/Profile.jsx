@@ -20,7 +20,7 @@ import {
   ExternalLink,
   Zap,
   Terminal,
-  Activity
+  Activity,
 } from 'lucide-react';
 
 const Github = ({ size = 24, className = '', ...props }) => (
@@ -62,22 +62,21 @@ const Linkedin = ({ size = 24, className = '', ...props }) => (
   </svg>
 );
 
-
 const Profile = () => {
   const { username: urlUsername } = useParams();
   const navigate = useNavigate();
   const { user: currentUser, isAuthenticated } = useAuth();
-  
+
   // Is this the user's own profile?
   const isOwnProfile = !urlUsername || (currentUser && currentUser.username === urlUsername);
-  
+
   // State
   const [profileUser, setProfileUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [editMode, setEditMode] = useState(false);
-  
+
   // Form State
   const [formData, setFormData] = useState({
     firstName: '',
@@ -96,9 +95,9 @@ const Profile = () => {
     university: '',
     graduationYear: '',
     degree: '',
-    mobileNumber: ''
+    mobileNumber: '',
   });
-  
+
   const [newTagInput, setNewTagInput] = useState('');
   const [profilePictureFile, setProfilePictureFile] = useState(null);
 
@@ -195,15 +194,15 @@ const Profile = () => {
       university: u.education?.university || '',
       graduationYear: u.education?.graduationYear || '',
       degree: u.education?.degree || '',
-      mobileNumber: u.mobileNumber || ''
+      mobileNumber: u.mobileNumber || '',
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -211,18 +210,18 @@ const Profile = () => {
   const handleAddTag = () => {
     const cleanTag = newTagInput.trim();
     if (cleanTag && !formData.techStackTags.includes(cleanTag)) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        techStackTags: [...prev.techStackTags, cleanTag]
+        techStackTags: [...prev.techStackTags, cleanTag],
       }));
       setNewTagInput('');
     }
   };
 
   const handleRemoveTag = (tagToRemove) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      techStackTags: prev.techStackTags.filter(t => t !== tagToRemove)
+      techStackTags: prev.techStackTags.filter((t) => t !== tagToRemove),
     }));
   };
 
@@ -232,7 +231,7 @@ const Profile = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-    
+
     try {
       const submitData = new FormData();
       submitData.append('firstName', formData.firstName);
@@ -244,18 +243,24 @@ const Profile = () => {
       submitData.append('skills', formData.skills);
       submitData.append('techStackTags', JSON.stringify(formData.techStackTags));
       submitData.append('mobileNumber', formData.mobileNumber);
-      submitData.append('links', JSON.stringify({
-        githubUrl: formData.githubUrl,
-        linkedinUrl: formData.linkedinUrl,
-        leetcodeUrl: formData.leetcodeUrl,
-        codeforcesUrl: formData.codeforcesUrl,
-        portfolioUrl: formData.portfolioUrl
-      }));
-      submitData.append('education', JSON.stringify({
-        university: formData.university,
-        graduationYear: formData.graduationYear ? Number(formData.graduationYear) : undefined,
-        degree: formData.degree
-      }));
+      submitData.append(
+        'links',
+        JSON.stringify({
+          githubUrl: formData.githubUrl,
+          linkedinUrl: formData.linkedinUrl,
+          leetcodeUrl: formData.leetcodeUrl,
+          codeforcesUrl: formData.codeforcesUrl,
+          portfolioUrl: formData.portfolioUrl,
+        })
+      );
+      submitData.append(
+        'education',
+        JSON.stringify({
+          university: formData.university,
+          graduationYear: formData.graduationYear ? Number(formData.graduationYear) : undefined,
+          degree: formData.degree,
+        })
+      );
 
       if (profilePictureFile) {
         submitData.append('profilePicture', profilePictureFile);
@@ -263,8 +268,8 @@ const Profile = () => {
 
       const response = await api.put('/users/profile', submitData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       setSuccess('Profile updated successfully!');
       setProfileUser(response.data.user);
@@ -316,11 +321,17 @@ const Profile = () => {
           </Link>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
-              <Link to="/dashboard" className="text-sm font-medium text-[#afacca] transition-colors hover:text-[#f7f6f0]">
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium text-[#afacca] transition-colors hover:text-[#f7f6f0]"
+              >
                 Dashboard
               </Link>
             ) : (
-              <Link to="/login" className="text-sm font-medium text-[#afacca] transition-colors hover:text-[#f7f6f0]">
+              <Link
+                to="/login"
+                className="text-sm font-medium text-[#afacca] transition-colors hover:text-[#f7f6f0]"
+              >
                 Sign In
               </Link>
             )}
@@ -332,13 +343,13 @@ const Profile = () => {
       <main className="max-w-7xl mx-auto px-6 py-10 w-full flex-1 z-10 space-y-6">
         {/* Back Link */}
         <div className="flex items-center justify-between">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#afacca] hover:text-white transition-all bg-[#595388]/10 hover:bg-[#595388]/20 px-3 py-1.5 rounded-lg border border-[rgba(175,172,202,0.08)]"
           >
             <ArrowLeft size={14} /> Back
           </button>
-          
+
           {isOwnProfile && !editMode && (
             <button
               onClick={() => setEditMode(true)}
@@ -361,20 +372,21 @@ const Profile = () => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
           {/* PROFILE PREVIEW COLUMN */}
-          <div className={`${editMode ? 'lg:col-span-4' : 'lg:col-span-12'} space-y-6 transition-all duration-300`}>
+          <div
+            className={`${editMode ? 'lg:col-span-4' : 'lg:col-span-12'} space-y-6 transition-all duration-300`}
+          >
             {profileUser && (
               <div className="glass-card rounded-3xl border border-[rgba(175,172,202,0.15)] bg-gradient-to-b from-[#595388]/10 via-transparent to-transparent p-6 md:p-8 space-y-8 relative overflow-hidden">
                 <div className="absolute top-0 right-0 h-48 w-48 -translate-y-1/2 translate-x-1/2 rounded-full bg-[#595388]/15 blur-[60px]" />
-                
+
                 {/* Header Profile Identity block */}
                 <div className="flex flex-col md:flex-row md:items-center gap-6 pb-6 border-b border-[rgba(175,172,202,0.1)] justify-between">
                   <div className="flex items-center gap-5">
                     {profileUser.profilePicture ? (
-                      <img 
-                        src={profileUser.profilePicture} 
-                        alt={profileUser.firstName} 
+                      <img
+                        src={profileUser.profilePicture}
+                        alt={profileUser.firstName}
                         className="h-20 w-20 rounded-2xl object-cover border-2 border-[#595388]/60 shadow-lg shadow-[#595388]/10"
                       />
                     ) : (
@@ -382,16 +394,18 @@ const Profile = () => {
                         {`${profileUser.firstName?.[0] || ''}${profileUser.lastName?.[0] || ''}`.toUpperCase()}
                       </div>
                     )}
-                    
+
                     <div className="space-y-1">
                       <div className="flex items-center gap-2.5">
-                        <h2 className="font-display font-bold text-2xl text-white">{profileUser.firstName} {profileUser.lastName}</h2>
+                        <h2 className="font-display font-bold text-2xl text-white">
+                          {profileUser.firstName} {profileUser.lastName}
+                        </h2>
                         <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#595388]/30 border border-[#595388]/50 text-[#afacca]">
                           {profileUser.experienceLevel || 'Intermediate'}
                         </span>
                       </div>
                       <p className="text-xs text-[#afacca]">@{profileUser.username}</p>
-                      
+
                       {profileUser.professionalHeadline && (
                         <p className="text-xs font-semibold text-[#f7f6f0] mt-1.5 italic">
                           " {profileUser.professionalHeadline} "
@@ -402,7 +416,9 @@ const Profile = () => {
 
                   {/* Primary Roles */}
                   <div className="flex flex-col md:items-end gap-1.5">
-                    <span className="text-[9px] text-[#afacca] uppercase tracking-widest font-bold">Primary Role</span>
+                    <span className="text-[9px] text-[#afacca] uppercase tracking-widest font-bold">
+                      Primary Role
+                    </span>
                     <span className="rounded-lg bg-[#595388] text-white px-3.5 py-1 text-xs font-bold uppercase tracking-wider shadow-lg shadow-[#595388]/30 border border-[#afacca]/20">
                       {profileUser.primaryRole || 'Full Stack'}
                     </span>
@@ -412,20 +428,34 @@ const Profile = () => {
                 {/* Grid stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-[#08070d]/60 border border-[rgba(175,172,202,0.06)] text-center">
                   <div className="space-y-1">
-                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">Global Rank</span>
+                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">
+                      Global Rank
+                    </span>
                     <span className="block font-display text-lg font-bold text-white">#42</span>
                   </div>
                   <div className="space-y-1 border-l border-[rgba(175,172,202,0.08)]">
-                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">Events</span>
-                    <span className="block font-display text-lg font-bold text-white">4 Attended</span>
+                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">
+                      Events
+                    </span>
+                    <span className="block font-display text-lg font-bold text-white">
+                      4 Attended
+                    </span>
                   </div>
                   <div className="space-y-1 border-l border-[rgba(175,172,202,0.08)]">
-                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">Score</span>
-                    <span className="block font-display text-lg font-bold text-green-400">820 XP</span>
+                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">
+                      Score
+                    </span>
+                    <span className="block font-display text-lg font-bold text-green-400">
+                      820 XP
+                    </span>
                   </div>
                   <div className="space-y-1 border-l border-[rgba(175,172,202,0.08)]">
-                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">wins</span>
-                    <span className="block font-display text-lg font-bold text-yellow-400">1 Gold</span>
+                    <span className="block text-[9px] text-[#afacca] uppercase tracking-widest">
+                      wins
+                    </span>
+                    <span className="block font-display text-lg font-bold text-yellow-400">
+                      1 Gold
+                    </span>
                   </div>
                 </div>
 
@@ -456,19 +486,22 @@ const Profile = () => {
                             <p className="text-[10px] text-[#afacca]/85 mt-0.5">Mobile Number</p>
                           </div>
                           {isOwnProfile && (
-                            <span className={`px-2.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
-                              profileUser.isMobileVerified 
-                                ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' 
-                                : 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 cursor-pointer'
-                            }`}
-                            onClick={() => {
-                              if (!profileUser.isMobileVerified) {
-                                handleResendOtp();
-                                setShowOtpModal(true);
-                              }
-                            }}
+                            <span
+                              className={`px-2.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                                profileUser.isMobileVerified
+                                  ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400'
+                                  : 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 cursor-pointer'
+                              }`}
+                              onClick={() => {
+                                if (!profileUser.isMobileVerified) {
+                                  handleResendOtp();
+                                  setShowOtpModal(true);
+                                }
+                              }}
                             >
-                              {profileUser.isMobileVerified ? 'Verified' : 'Unverified - Verify Now'}
+                              {profileUser.isMobileVerified
+                                ? 'Verified'
+                                : 'Unverified - Verify Now'}
                             </span>
                           )}
                         </div>
@@ -484,7 +517,8 @@ const Profile = () => {
                         <div className="p-3.5 rounded-xl border border-[rgba(175,172,202,0.06)] bg-[#08070d]/30 text-xs">
                           <p className="font-bold text-white">{profileUser.education.university}</p>
                           <p className="text-[#afacca]/85 mt-1">
-                            {profileUser.education.degree || 'Degree'} • Class of {profileUser.education.graduationYear || 'N/A'}
+                            {profileUser.education.degree || 'Degree'} • Class of{' '}
+                            {profileUser.education.graduationYear || 'N/A'}
                           </p>
                         </div>
                       </div>
@@ -492,12 +526,14 @@ const Profile = () => {
 
                     {/* Portfolios and Profiles */}
                     <div className="space-y-2.5">
-                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#afacca]">Connect & Portfolios</h4>
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#afacca]">
+                        Connect & Portfolios
+                      </h4>
                       <div className="flex flex-wrap gap-2.5">
                         {profileUser.links?.githubUrl && (
-                          <a 
-                            href={profileUser.links.githubUrl} 
-                            target="_blank" 
+                          <a
+                            href={profileUser.links.githubUrl}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 rounded-lg border border-[rgba(175,172,202,0.12)] bg-[#595388]/10 px-3 py-1.5 text-xs text-[#afacca] hover:text-white hover:border-[#595388] transition-all"
                           >
@@ -505,9 +541,9 @@ const Profile = () => {
                           </a>
                         )}
                         {profileUser.links?.linkedinUrl && (
-                          <a 
-                            href={profileUser.links.linkedinUrl} 
-                            target="_blank" 
+                          <a
+                            href={profileUser.links.linkedinUrl}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 rounded-lg border border-[rgba(175,172,202,0.12)] bg-[#595388]/10 px-3 py-1.5 text-xs text-[#afacca] hover:text-white hover:border-[#595388] transition-all"
                           >
@@ -515,9 +551,9 @@ const Profile = () => {
                           </a>
                         )}
                         {profileUser.links?.leetcodeUrl && (
-                          <a 
-                            href={profileUser.links.leetcodeUrl} 
-                            target="_blank" 
+                          <a
+                            href={profileUser.links.leetcodeUrl}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 rounded-lg border border-[rgba(175,172,202,0.12)] bg-[#595388]/10 px-3 py-1.5 text-xs text-[#afacca] hover:text-white hover:border-[#595388] transition-all"
                           >
@@ -525,9 +561,9 @@ const Profile = () => {
                           </a>
                         )}
                         {profileUser.links?.codeforcesUrl && (
-                          <a 
-                            href={profileUser.links.codeforcesUrl} 
-                            target="_blank" 
+                          <a
+                            href={profileUser.links.codeforcesUrl}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 rounded-lg border border-[rgba(175,172,202,0.12)] bg-[#595388]/10 px-3 py-1.5 text-xs text-[#afacca] hover:text-white hover:border-[#595388] transition-all"
                           >
@@ -535,9 +571,9 @@ const Profile = () => {
                           </a>
                         )}
                         {profileUser.links?.portfolioUrl && (
-                          <a 
-                            href={profileUser.links.portfolioUrl} 
-                            target="_blank" 
+                          <a
+                            href={profileUser.links.portfolioUrl}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 rounded-lg border border-[rgba(175,172,202,0.12)] bg-[#595388]/10 px-3 py-1.5 text-xs text-[#afacca] hover:text-white hover:border-[#595388] transition-all"
                           >
@@ -556,13 +592,19 @@ const Profile = () => {
                         <Tag size={12} /> The Hacker Arsenal
                       </h4>
                       <div className="flex flex-wrap gap-1.5">
-                        {profileUser.techStackTags && profileUser.techStackTags.map(tag => (
-                          <span key={tag} className="text-xs bg-[#595388]/20 border border-[#595388]/40 px-2.5 py-1 rounded-full text-[#afacca]">
-                            {tag}
-                          </span>
-                        ))}
+                        {profileUser.techStackTags &&
+                          profileUser.techStackTags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="text-xs bg-[#595388]/20 border border-[#595388]/40 px-2.5 py-1 rounded-full text-[#afacca]"
+                            >
+                              {tag}
+                            </span>
+                          ))}
                         {(!profileUser.techStackTags || profileUser.techStackTags.length === 0) && (
-                          <p className="text-xs text-[#afacca] italic">Arsenal tags have not been loaded yet.</p>
+                          <p className="text-xs text-[#afacca] italic">
+                            Arsenal tags have not been loaded yet.
+                          </p>
                         )}
                       </div>
                     </div>
@@ -603,13 +645,13 @@ const Profile = () => {
                           <ExternalLink size={12} className="text-[#afacca]" />
                         </p>
                         <p className="text-[#afacca]/85 mt-1 leading-relaxed text-[11px]">
-                          Built a movie ticket reservation portal utilizing the MERN stack with advanced socket checkins.
+                          Built a movie ticket reservation portal utilizing the MERN stack with
+                          advanced socket checkins.
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
             )}
           </div>
@@ -617,15 +659,22 @@ const Profile = () => {
           {/* EDIT SETTINGS COLUMN */}
           {editMode && (
             <div className="lg:col-span-8 space-y-6">
-              <form onSubmit={handleSubmit} className="glass-card p-6 md:p-8 rounded-3xl border border-[rgba(175,172,202,0.18)] space-y-6">
+              <form
+                onSubmit={handleSubmit}
+                className="glass-card p-6 md:p-8 rounded-3xl border border-[rgba(175,172,202,0.18)] space-y-6"
+              >
                 <div>
-                  <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Edit Profile Settings</h3>
+                  <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                    Edit Profile Settings
+                  </h3>
                   <p className="text-xs text-[#afacca]">Establish your hacker resume credentials</p>
                 </div>
 
                 {/* Profile Picture Upload */}
                 <div className="flex flex-col gap-1.5 p-4 rounded-2xl border border-[rgba(175,172,202,0.1)] bg-[#08070d]/30">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Upload Profile Picture / Headshot</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Upload Profile Picture / Headshot
+                  </label>
                   <input
                     type="file"
                     accept="image/*"
@@ -637,7 +686,9 @@ const Profile = () => {
                 {/* Identity */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">First Name</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      First Name
+                    </label>
                     <input
                       type="text"
                       name="firstName"
@@ -648,7 +699,9 @@ const Profile = () => {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Last Name</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       name="lastName"
@@ -662,7 +715,9 @@ const Profile = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Professional Headline</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Professional Headline
+                    </label>
                     <input
                       type="text"
                       name="professionalHeadline"
@@ -673,7 +728,9 @@ const Profile = () => {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Mobile Number</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Mobile Number
+                    </label>
                     <input
                       type="tel"
                       name="mobileNumber"
@@ -686,7 +743,9 @@ const Profile = () => {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Bio Description</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Bio Description
+                  </label>
                   <textarea
                     name="bio"
                     rows="3"
@@ -700,7 +759,9 @@ const Profile = () => {
                 {/* Roles and Stack */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Primary Role</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Primary Role
+                    </label>
                     <select
                       name="primaryRole"
                       value={formData.primaryRole}
@@ -717,7 +778,9 @@ const Profile = () => {
                     </select>
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Experience Level</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Experience Level
+                    </label>
                     <select
                       name="experienceLevel"
                       value={formData.experienceLevel}
@@ -733,7 +796,9 @@ const Profile = () => {
 
                 {/* Tech Stack tag creator */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">The Hacker Arsenal (Tech Stack Tags)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    The Hacker Arsenal (Tech Stack Tags)
+                  </label>
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -751,11 +816,14 @@ const Profile = () => {
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-1.5 pt-2">
-                    {formData.techStackTags.map(tag => (
-                      <span key={tag} className="flex items-center gap-1 text-xs bg-[#595388]/30 px-3 py-1 rounded-full border border-[#595388]/50 text-[#afacca]">
+                    {formData.techStackTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="flex items-center gap-1 text-xs bg-[#595388]/30 px-3 py-1 rounded-full border border-[#595388]/50 text-[#afacca]"
+                      >
                         {tag}
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={() => handleRemoveTag(tag)}
                           className="text-red-400 hover:text-red-300 ml-1 font-bold text-xs"
                         >
@@ -768,10 +836,14 @@ const Profile = () => {
 
                 {/* Education */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-3">Education</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-3">
+                    Education
+                  </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="flex flex-col gap-1.5 md:col-span-2">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">University / School</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                        University / School
+                      </label>
                       <input
                         type="text"
                         name="university"
@@ -782,7 +854,9 @@ const Profile = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Graduation Year</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Graduation Year
+                      </label>
                       <input
                         type="number"
                         name="graduationYear"
@@ -794,7 +868,9 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5 mt-3">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Degree / Major</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Degree / Major
+                    </label>
                     <input
                       type="text"
                       name="degree"
@@ -808,10 +884,14 @@ const Profile = () => {
 
                 {/* Portfolios and Links */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-3">External Links</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-3">
+                    External Links
+                  </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">GitHub Link</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                        GitHub Link
+                      </label>
                       <input
                         type="url"
                         name="githubUrl"
@@ -822,7 +902,9 @@ const Profile = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">LinkedIn Link</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                        LinkedIn Link
+                      </label>
                       <input
                         type="url"
                         name="linkedinUrl"
@@ -833,7 +915,9 @@ const Profile = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">LeetCode Link</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                        LeetCode Link
+                      </label>
                       <input
                         type="url"
                         name="leetcodeUrl"
@@ -844,7 +928,9 @@ const Profile = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Codeforces Link</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Codeforces Link
+                      </label>
                       <input
                         type="url"
                         name="codeforcesUrl"
@@ -856,7 +942,9 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5 mt-3">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Personal Portfolio Link</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                      Personal Portfolio Link
+                    </label>
                     <input
                       type="url"
                       name="portfolioUrl"
@@ -887,7 +975,6 @@ const Profile = () => {
               </form>
             </div>
           )}
-
         </div>
       </main>
 
@@ -898,8 +985,12 @@ const Profile = () => {
             <p className="font-semibold text-white">© 2026 HackFlow Inc. All rights reserved.</p>
           </div>
           <div className="flex gap-6">
-            <Link to="/events" className="hover:text-[#f7f6f0]">All Events</Link>
-            <Link to="/dashboard" className="hover:text-[#f7f6f0]">Dashboard</Link>
+            <Link to="/events" className="hover:text-[#f7f6f0]">
+              All Events
+            </Link>
+            <Link to="/dashboard" className="hover:text-[#f7f6f0]">
+              Dashboard
+            </Link>
           </div>
         </div>
       </footer>
@@ -909,7 +1000,9 @@ const Profile = () => {
           <div className="w-full max-w-md p-6 rounded-2xl border border-[rgba(175,172,202,0.2)] bg-[#0f0d1a] shadow-xl space-y-6">
             <div className="border-b border-[rgba(175,172,202,0.1)] pb-3">
               <h3 className="font-display font-bold text-lg text-white">Verify Mobile Number</h3>
-              <p className="text-xs text-[#afacca] mt-1">We've sent a 6-digit verification code to your mobile number.</p>
+              <p className="text-xs text-[#afacca] mt-1">
+                We've sent a 6-digit verification code to your mobile number.
+              </p>
             </div>
 
             {/* Mock SMS Notice */}
@@ -932,7 +1025,9 @@ const Profile = () => {
 
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Enter 6-Digit OTP</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Enter 6-Digit OTP
+                </label>
                 <input
                   type="text"
                   maxLength="6"

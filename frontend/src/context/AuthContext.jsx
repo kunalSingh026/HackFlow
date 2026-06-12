@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         setUser(res.data.user);
         setIsAuthenticated(true);
       } catch (error) {
-        console.error("Session expired or no active session.");
+        console.error('Session expired or no active session.');
         setUser(null);
         setIsAuthenticated(false);
       } finally {
@@ -49,7 +49,10 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.response?.data?.message || 'A network error occurred. Please try again.' };
+      return {
+        success: false,
+        error: error.response?.data?.message || 'A network error occurred. Please try again.',
+      };
     }
   };
 
@@ -58,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error("Logout request failed:", error);
+      console.error('Logout request failed:', error);
     } finally {
       setUser(null);
       setIsAuthenticated(false);

@@ -1,16 +1,16 @@
 const nodemailer = require('nodemailer');
 
-const sendEmail = async(options) => {
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+const sendEmail = async (options) => {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-    // The HTML Template
-    const htmlTemplate = `
+  // The HTML Template
+  const htmlTemplate = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
             <h2 style="color: #2c3e50; text-align: center;">Welcome to HackFlow!</h2>
             <p style="color: #555; font-size: 16px;">Hi there,</p>
@@ -23,15 +23,15 @@ const sendEmail = async(options) => {
         </div>
     `;
 
-    //Define the email options
-    const mailOptions = {
-        from: 'HackFlow Team <noreply@hackflow.com>', //Makes it look professional in the inbox
-        to: options.email,
-        subject: options.subject,
-        html: htmlTemplate
-    };
+  //Define the email options
+  const mailOptions = {
+    from: 'HackFlow Team <noreply@hackflow.com>', //Makes it look professional in the inbox
+    to: options.email,
+    subject: options.subject,
+    html: htmlTemplate,
+  };
 
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendEmail;

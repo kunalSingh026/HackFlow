@@ -12,13 +12,13 @@ import {
   Trash2,
   ArrowLeft,
   Loader,
-  Users
+  Users,
 } from 'lucide-react';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
   const [activeTab, setActiveTab] = useState('basic');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -60,7 +60,7 @@ const CreateEvent = () => {
       tshirts: false,
       meals: false,
       cloudCredits: false,
-      certificates: false
+      certificates: false,
     },
 
     // Judging Rubric
@@ -82,8 +82,8 @@ const CreateEvent = () => {
       githubLink: true,
       demoVideo: true,
       presentationLink: true,
-      description: true
-    }
+      description: true,
+    },
   });
 
   // Track Dynamic Inputs state helper
@@ -92,172 +92,163 @@ const CreateEvent = () => {
   // Handle Basic Inputs
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   // Swag perks handler
   const handleSwagChange = (e) => {
     const { name, checked } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       swagPerks: {
         ...prev.swagPerks,
-        [name]: checked
-      }
+        [name]: checked,
+      },
     }));
   };
 
   // Submission requirements toggles handler
   const handleSubmissionRequirementsChange = (e) => {
     const { name, checked } = e.target;
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       submissionRequirements: {
         ...prev.submissionRequirements,
-        [name]: checked
-      }
+        [name]: checked,
+      },
     }));
   };
 
   // Dynamic Array Adders / Removers
   const addMentoringRound = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       mentoringRounds: [
         ...prev.mentoringRounds,
-        { roundNumber: prev.mentoringRounds.length + 1, time: '', details: '' }
-      ]
+        { roundNumber: prev.mentoringRounds.length + 1, time: '', details: '' },
+      ],
     }));
   };
 
   const removeMentoringRound = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      mentoringRounds: prev.mentoringRounds.filter((_, i) => i !== index)
+      mentoringRounds: prev.mentoringRounds.filter((_, i) => i !== index),
     }));
   };
 
   const handleMentoringChange = (index, field, value) => {
     const updated = [...eventData.mentoringRounds];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, mentoringRounds: updated }));
+    setEventData((prev) => ({ ...prev, mentoringRounds: updated }));
   };
 
   // Tracks tags handler
   const addTrackTag = () => {
     if (newTrackTag.trim() && !eventData.tracks.includes(newTrackTag.trim())) {
-      setEventData(prev => ({
+      setEventData((prev) => ({
         ...prev,
-        tracks: [...prev.tracks, newTrackTag.trim()]
+        tracks: [...prev.tracks, newTrackTag.trim()],
       }));
       setNewTrackTag('');
     }
   };
 
   const removeTrackTag = (tag) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      tracks: prev.tracks.filter(t => t !== tag)
+      tracks: prev.tracks.filter((t) => t !== tag),
     }));
   };
 
   // Custom Problem Statements handler
   const addProblemStatement = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
       customProblemStatements: [
         ...prev.customProblemStatements,
-        { title: '', description: '', sponsor: '' }
-      ]
+        { title: '', description: '', sponsor: '' },
+      ],
     }));
   };
 
   const removeProblemStatement = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      customProblemStatements: prev.customProblemStatements.filter((_, i) => i !== index)
+      customProblemStatements: prev.customProblemStatements.filter((_, i) => i !== index),
     }));
   };
 
   const handleProblemChange = (index, field, value) => {
     const updated = [...eventData.customProblemStatements];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, customProblemStatements: updated }));
+    setEventData((prev) => ({ ...prev, customProblemStatements: updated }));
   };
 
   // Special category prizes handler
   const addSpecialPrize = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      specialCategories: [
-        ...prev.specialCategories,
-        { categoryName: '', prizeDescription: '' }
-      ]
+      specialCategories: [...prev.specialCategories, { categoryName: '', prizeDescription: '' }],
     }));
   };
 
   const removeSpecialPrize = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      specialCategories: prev.specialCategories.filter((_, i) => i !== index)
+      specialCategories: prev.specialCategories.filter((_, i) => i !== index),
     }));
   };
 
   const handleSpecialPrizeChange = (index, field, value) => {
     const updated = [...eventData.specialCategories];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, specialCategories: updated }));
+    setEventData((prev) => ({ ...prev, specialCategories: updated }));
   };
 
   // Judging criteria handler
   const addJudgingCriteria = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      judgingCriteria: [
-        ...prev.judgingCriteria,
-        { criteriaName: '', weightage: 0 }
-      ]
+      judgingCriteria: [...prev.judgingCriteria, { criteriaName: '', weightage: 0 }],
     }));
   };
 
   const removeJudgingCriteria = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      judgingCriteria: prev.judgingCriteria.filter((_, i) => i !== index)
+      judgingCriteria: prev.judgingCriteria.filter((_, i) => i !== index),
     }));
   };
 
   const handleJudgingCriteriaChange = (index, field, value) => {
     const updated = [...eventData.judgingCriteria];
     updated[index][field] = field === 'weightage' ? Number(value) : value;
-    setEventData(prev => ({ ...prev, judgingCriteria: updated }));
+    setEventData((prev) => ({ ...prev, judgingCriteria: updated }));
   };
 
   // FAQs handler
   const addFaq = () => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      faqs: [
-        ...prev.faqs,
-        { question: '', answer: '' }
-      ]
+      faqs: [...prev.faqs, { question: '', answer: '' }],
     }));
   };
 
   const removeFaq = (index) => {
-    setEventData(prev => ({
+    setEventData((prev) => ({
       ...prev,
-      faqs: prev.faqs.filter((_, i) => i !== index)
+      faqs: prev.faqs.filter((_, i) => i !== index),
     }));
   };
 
   const handleFaqChange = (index, field, value) => {
     const updated = [...eventData.faqs];
     updated[index][field] = value;
-    setEventData(prev => ({ ...prev, faqs: updated }));
+    setEventData((prev) => ({ ...prev, faqs: updated }));
   };
 
   // Form submission
@@ -282,7 +273,7 @@ const CreateEvent = () => {
       shortlistAnnouncement: eventData.shortlistAnnouncement,
       hackingStart: eventData.hackingStart,
       hackingEnd: eventData.hackingEnd,
-      judgingValedictory: eventData.judgingValedictory
+      judgingValedictory: eventData.judgingValedictory,
     };
 
     const keys = [
@@ -292,19 +283,20 @@ const CreateEvent = () => {
       'shortlistAnnouncement',
       'hackingStart',
       'hackingEnd',
-      'judgingValedictory'
+      'judgingValedictory',
     ];
 
     for (let i = 0; i < keys.length; i++) {
       const currentVal = dates[keys[i]];
       if (!currentVal) continue;
-      
+
       for (let j = i + 1; j < keys.length; j++) {
         const nextVal = dates[keys[j]];
         if (!nextVal) continue;
-        
+
         if (new Date(currentVal) > new Date(nextVal)) {
-          const formatLabel = (key) => key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+          const formatLabel = (key) =>
+            key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
           setError(`${formatLabel(keys[i])} must be scheduled before ${formatLabel(keys[j])}.`);
           setLoading(false);
           return;
@@ -318,17 +310,21 @@ const CreateEvent = () => {
         const round = eventData.mentoringRounds[i];
         if (!round.time) continue;
         if (lastTime && new Date(round.time) < new Date(lastTime)) {
-          setError(`Mentoring Round ${i + 1} must be scheduled after ${lastTime === eventData.hackingStart ? 'Hacking Coding Start' : 'previous step/round'}.`);
+          setError(
+            `Mentoring Round ${i + 1} must be scheduled after ${lastTime === eventData.hackingStart ? 'Hacking Coding Start' : 'previous step/round'}.`
+          );
           setLoading(false);
           return;
         }
         lastTime = round.time;
       }
-      
+
       if (eventData.hackingEnd) {
         const lastRound = eventData.mentoringRounds[eventData.mentoringRounds.length - 1];
         if (lastRound.time && new Date(lastRound.time) > new Date(eventData.hackingEnd)) {
-          setError(`Mentoring Round ${eventData.mentoringRounds.length} must be scheduled before Hacking Coding Freeze.`);
+          setError(
+            `Mentoring Round ${eventData.mentoringRounds.length} must be scheduled before Hacking Coding Freeze.`
+          );
           setLoading(false);
           return;
         }
@@ -350,23 +346,26 @@ const CreateEvent = () => {
         title: eventData.title,
         description: {
           short: eventData.shortDesc,
-          detailed: eventData.detailedDesc
+          detailed: eventData.detailedDesc,
         },
         category: eventData.category,
-        tags: eventData.tags.split(',').map(t => t.trim()).filter(Boolean),
+        tags: eventData.tags
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean),
         mode: eventData.mode,
-        venue: (eventData.mode === 'offline' || eventData.mode === 'hybrid') ? eventData.venue : '',
+        venue: eventData.mode === 'offline' || eventData.mode === 'hybrid' ? eventData.venue : '',
         ticketing: {
           isFree: true,
           ticketPrice: 0,
           currency: 'INR',
           totalSeats: Number(eventData.totalSeats),
           availableSeats: Number(eventData.totalSeats),
-          maxTicketsPerUser: 1
+          maxTicketsPerUser: 1,
         },
         visibility: {
           isPublic: eventData.isPublic,
-          allowedColleges: []
+          allowedColleges: [],
         },
         phases: {
           registrationStart: eventData.registrationStart || undefined,
@@ -376,7 +375,7 @@ const CreateEvent = () => {
           hackingStart: eventData.hackingStart || undefined,
           hackingEnd: eventData.hackingEnd || undefined,
           mentoringRounds: eventData.mentoringRounds,
-          judgingValedictory: eventData.judgingValedictory || undefined
+          judgingValedictory: eventData.judgingValedictory || undefined,
         },
         tracks: eventData.tracks,
         customProblemStatements: eventData.customProblemStatements,
@@ -386,21 +385,21 @@ const CreateEvent = () => {
           secondPlace: eventData.secondPlace,
           thirdPlace: eventData.thirdPlace,
           specialCategories: eventData.specialCategories,
-          swagPerks: eventData.swagPerks
+          swagPerks: eventData.swagPerks,
         },
         judgingCriteria: eventData.judgingCriteria,
         eligibility: {
           institutionPolicy: eventData.institutionPolicy,
           interCollegeTeams: eventData.interCollegeTeams,
           minTeamSize: Number(eventData.minTeamSize),
-          maxTeamSize: Number(eventData.maxTeamSize)
+          maxTeamSize: Number(eventData.maxTeamSize),
         },
         submissionRequirements: eventData.submissionRequirements,
         logistics: {
           discordInvite: eventData.discordInvite,
           whatsappInvite: eventData.whatsappInvite,
-          faqs: eventData.faqs
-        }
+          faqs: eventData.faqs,
+        },
       };
 
       await api.post('/events', payload);
@@ -416,18 +415,21 @@ const CreateEvent = () => {
   return (
     <div className="min-h-screen bg-[#08070d] text-[#f7f6f0] p-6 md:p-10">
       <div className="max-w-4xl mx-auto space-y-6">
-        
         {/* Navigation / Header */}
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => navigate('/dashboard')} 
+          <button
+            onClick={() => navigate('/dashboard')}
             className="p-2.5 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[#595388]/10 hover:bg-[#595388]/20 transition-all text-[#afacca]"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <h1 className="font-display text-2xl font-bold tracking-tight">Deploy Hackathon Event</h1>
-            <p className="text-xs text-[#afacca]">Specify timelines, tracks, criteria, and logistics</p>
+            <h1 className="font-display text-2xl font-bold tracking-tight">
+              Deploy Hackathon Event
+            </h1>
+            <p className="text-xs text-[#afacca]">
+              Specify timelines, tracks, criteria, and logistics
+            </p>
           </div>
         </div>
 
@@ -450,8 +452,8 @@ const CreateEvent = () => {
             { id: 'timeline', label: 'Timelines', icon: Calendar },
             { id: 'tracks', label: 'Tracks & Problems', icon: Layers },
             { id: 'prizes', label: 'Prizes & Rubric', icon: Award },
-            { id: 'logistics', label: 'Eligibility & Links', icon: HelpCircle }
-          ].map(tab => {
+            { id: 'logistics', label: 'Eligibility & Links', icon: HelpCircle },
+          ].map((tab) => {
             const Icon = tab.icon;
             return (
               <button
@@ -459,8 +461,8 @@ const CreateEvent = () => {
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
-                  activeTab === tab.id 
-                    ? 'bg-[#595388] text-[#f7f6f0]' 
+                  activeTab === tab.id
+                    ? 'bg-[#595388] text-[#f7f6f0]'
                     : 'text-[#afacca] hover:bg-[#595388]/20'
                 }`}
               >
@@ -472,15 +474,21 @@ const CreateEvent = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="glass-card p-6 md:p-8 rounded-2xl border border-[rgba(175,172,202,0.15)] space-y-6">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="glass-card p-6 md:p-8 rounded-2xl border border-[rgba(175,172,202,0.15)] space-y-6"
+        >
           {/* TAB 1: BASIC INFO */}
           {activeTab === 'basic' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Event Basics</h3>
-              
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Event Basics
+              </h3>
+
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hackathon Title</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Hackathon Title
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -494,7 +502,9 @@ const CreateEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Category</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Category
+                  </label>
                   <input
                     type="text"
                     name="category"
@@ -505,7 +515,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hosting Mode</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Hosting Mode
+                  </label>
                   <select
                     name="mode"
                     value={eventData.mode}
@@ -521,7 +533,9 @@ const CreateEvent = () => {
 
               {(eventData.mode === 'offline' || eventData.mode === 'hybrid') && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Venue / Physical Location</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Venue / Physical Location
+                  </label>
                   <input
                     type="text"
                     name="venue"
@@ -536,7 +550,9 @@ const CreateEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Total Seats (Max Teams/Individuals)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Total Seats (Max Teams/Individuals)
+                  </label>
                   <input
                     type="number"
                     name="totalSeats"
@@ -548,7 +564,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Tags (Comma Separated)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Tags (Comma Separated)
+                  </label>
                   <input
                     type="text"
                     name="tags"
@@ -561,7 +579,9 @@ const CreateEvent = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Short Description (Max 150 chars)</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Short Description (Max 150 chars)
+                </label>
                 <input
                   type="text"
                   name="shortDesc"
@@ -575,7 +595,9 @@ const CreateEvent = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Detailed Overview & Guidelines</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Detailed Overview & Guidelines
+                </label>
                 <textarea
                   name="detailedDesc"
                   rows="5"
@@ -596,21 +618,26 @@ const CreateEvent = () => {
                   onChange={handleInputChange}
                   className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                 />
-                <label htmlFor="isPublic" className="text-xs font-semibold text-[#afacca] cursor-pointer select-none font-semibold">
+                <label
+                  htmlFor="isPublic"
+                  className="text-xs font-semibold text-[#afacca] cursor-pointer select-none font-semibold"
+                >
                   Make event public (Visible to all users immediately)
                 </label>
               </div>
 
               {/* Project Submission Toggles */}
               <div className="pt-4 border-t border-[rgba(175,172,202,0.1)]">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca] mb-2 block">Project Submission Requirements</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca] mb-2 block">
+                  Project Submission Requirements
+                </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-[rgba(8,7,13,0.5)] border border-[rgba(175,172,202,0.1)] rounded-xl">
                   {[
                     { name: 'githubLink', label: 'GitHub Repository' },
                     { name: 'demoVideo', label: 'YouTube Video Demo' },
                     { name: 'presentationLink', label: 'Slide Deck / PPT' },
-                    { name: 'description', label: 'Project Description' }
-                  ].map(req => (
+                    { name: 'description', label: 'Project Description' },
+                  ].map((req) => (
                     <div key={req.name} className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -620,7 +647,10 @@ const CreateEvent = () => {
                         onChange={handleSubmissionRequirementsChange}
                         className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                       />
-                      <label htmlFor={`req-${req.name}`} className="text-xs text-[#afacca] cursor-pointer select-none">
+                      <label
+                        htmlFor={`req-${req.name}`}
+                        className="text-xs text-[#afacca] cursor-pointer select-none"
+                      >
                         {req.label}
                       </label>
                     </div>
@@ -633,11 +663,15 @@ const CreateEvent = () => {
           {/* TAB 2: TIMELINES */}
           {activeTab === 'timeline' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Distinct Phases</h3>
-              
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Distinct Phases
+              </h3>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Registration Opens</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Registration Opens
+                  </label>
                   <input
                     type="datetime-local"
                     name="registrationStart"
@@ -647,7 +681,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Registration Closes</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Registration Closes
+                  </label>
                   <input
                     type="datetime-local"
                     name="registrationEnd"
@@ -661,7 +697,9 @@ const CreateEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Idea/Abstract Submission Deadline</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Idea/Abstract Submission Deadline
+                  </label>
                   <input
                     type="datetime-local"
                     name="ideaSubmissionEnd"
@@ -672,13 +710,19 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Shortlist Announcement Date</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Shortlist Announcement Date
+                  </label>
                   <input
                     type="datetime-local"
                     name="shortlistAnnouncement"
                     value={eventData.shortlistAnnouncement}
                     onChange={handleInputChange}
-                    min={eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                    min={
+                      eventData.ideaSubmissionEnd ||
+                      eventData.registrationEnd ||
+                      eventData.registrationStart
+                    }
                     className="input-field text-sm"
                   />
                 </div>
@@ -686,37 +730,61 @@ const CreateEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hacking Coding Start</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Hacking Coding Start
+                  </label>
                   <input
                     type="datetime-local"
                     name="hackingStart"
                     value={eventData.hackingStart}
                     onChange={handleInputChange}
-                    min={eventData.shortlistAnnouncement || eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                    min={
+                      eventData.shortlistAnnouncement ||
+                      eventData.ideaSubmissionEnd ||
+                      eventData.registrationEnd ||
+                      eventData.registrationStart
+                    }
                     className="input-field text-sm"
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Hacking Coding Freeze</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Hacking Coding Freeze
+                  </label>
                   <input
                     type="datetime-local"
                     name="hackingEnd"
                     value={eventData.hackingEnd}
                     onChange={handleInputChange}
-                    min={eventData.hackingStart || eventData.shortlistAnnouncement || eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                    min={
+                      eventData.hackingStart ||
+                      eventData.shortlistAnnouncement ||
+                      eventData.ideaSubmissionEnd ||
+                      eventData.registrationEnd ||
+                      eventData.registrationStart
+                    }
                     className="input-field text-sm"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Judging & Valedictory Slot</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Judging & Valedictory Slot
+                </label>
                 <input
                   type="datetime-local"
                   name="judgingValedictory"
                   value={eventData.judgingValedictory}
                   onChange={handleInputChange}
-                  min={eventData.hackingEnd || eventData.hackingStart || eventData.shortlistAnnouncement || eventData.ideaSubmissionEnd || eventData.registrationEnd || eventData.registrationStart}
+                  min={
+                    eventData.hackingEnd ||
+                    eventData.hackingStart ||
+                    eventData.shortlistAnnouncement ||
+                    eventData.ideaSubmissionEnd ||
+                    eventData.registrationEnd ||
+                    eventData.registrationStart
+                  }
                   className="input-field text-sm"
                 />
               </div>
@@ -724,7 +792,9 @@ const CreateEvent = () => {
               {/* Mentoring Rounds Section */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Mentoring Rounds Checkpoints</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Mentoring Rounds Checkpoints
+                  </h4>
                   <button
                     type="button"
                     onClick={addMentoringRound}
@@ -735,20 +805,33 @@ const CreateEvent = () => {
                 </div>
 
                 {eventData.mentoringRounds.map((round, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end">
-                    <div className="w-12 text-center text-xs font-bold text-[#afacca]">Round {idx + 1}</div>
+                  <div
+                    key={idx}
+                    className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end"
+                  >
+                    <div className="w-12 text-center text-xs font-bold text-[#afacca]">
+                      Round {idx + 1}
+                    </div>
                     <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Date & Time</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Date & Time
+                      </label>
                       <input
                         type="datetime-local"
                         value={round.time}
                         onChange={(e) => handleMentoringChange(idx, 'time', e.target.value)}
-                        min={idx > 0 ? eventData.mentoringRounds[idx - 1].time : (eventData.hackingStart || eventData.registrationStart)}
+                        min={
+                          idx > 0
+                            ? eventData.mentoringRounds[idx - 1].time
+                            : eventData.hackingStart || eventData.registrationStart
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
                     <div className="flex-[2] flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Details / Focus</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Details / Focus
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Design review, Architecture check"
@@ -767,18 +850,21 @@ const CreateEvent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           )}
 
           {/* TAB 3: TRACKS & PROBLEMS */}
           {activeTab === 'tracks' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Tracks & Problem Statements</h3>
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Tracks & Problem Statements
+              </h3>
 
               {/* Tracks Tags */}
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Domain Tracks / Categories</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                  Domain Tracks / Categories
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -796,11 +882,14 @@ const CreateEvent = () => {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2">
-                  {eventData.tracks.map(tag => (
-                    <span key={tag} className="flex items-center gap-1 text-xs bg-[#595388]/30 px-3 py-1 rounded-full border border-[#595388]/50">
+                  {eventData.tracks.map((tag) => (
+                    <span
+                      key={tag}
+                      className="flex items-center gap-1 text-xs bg-[#595388]/30 px-3 py-1 rounded-full border border-[#595388]/50"
+                    >
                       {tag}
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => removeTrackTag(tag)}
                         className="text-red-400 hover:text-red-300 ml-1 font-bold"
                       >
@@ -809,7 +898,9 @@ const CreateEvent = () => {
                     </span>
                   ))}
                   {eventData.tracks.length === 0 && (
-                    <p className="text-xs text-[#afacca] italic">No tracks added. Type a track and click "Add Track".</p>
+                    <p className="text-xs text-[#afacca] italic">
+                      No tracks added. Type a track and click "Add Track".
+                    </p>
                   )}
                 </div>
               </div>
@@ -817,7 +908,9 @@ const CreateEvent = () => {
               {/* Custom Problem Statements */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Specific Problem Statements</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Specific Problem Statements
+                  </h4>
                   <button
                     type="button"
                     onClick={addProblemStatement}
@@ -828,7 +921,10 @@ const CreateEvent = () => {
                 </div>
 
                 {eventData.customProblemStatements.map((prob, idx) => (
-                  <div key={idx} className="space-y-3 p-4 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative">
+                  <div
+                    key={idx}
+                    className="space-y-3 p-4 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative"
+                  >
                     <button
                       type="button"
                       onClick={() => removeProblemStatement(idx)}
@@ -836,10 +932,12 @@ const CreateEvent = () => {
                     >
                       <Trash2 size={16} />
                     </button>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
-                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Statement Title</label>
+                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                          Statement Title
+                        </label>
                         <input
                           type="text"
                           placeholder="e.g. Decentralized Identity Verification"
@@ -849,7 +947,9 @@ const CreateEvent = () => {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Sponsor/Issuer</label>
+                        <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                          Sponsor/Issuer
+                        </label>
                         <input
                           type="text"
                           placeholder="e.g. Coinbase or College Dept"
@@ -861,7 +961,9 @@ const CreateEvent = () => {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Detailed Description</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Detailed Description
+                      </label>
                       <textarea
                         rows="2"
                         placeholder="Detailed requirements, criteria, resources..."
@@ -873,18 +975,21 @@ const CreateEvent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           )}
 
           {/* TAB 4: PRIZES & JUDGING */}
           {activeTab === 'prizes' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Prizes & Judging Rubric</h3>
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Prizes & Judging Rubric
+              </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Total Prize Pool (Numeric Value)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Total Prize Pool (Numeric Value)
+                  </label>
                   <input
                     type="number"
                     name="totalPrizePool"
@@ -894,7 +999,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">1st Place Reward Details</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    1st Place Reward Details
+                  </label>
                   <input
                     type="text"
                     name="firstPlace"
@@ -908,7 +1015,9 @@ const CreateEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">2nd Place Reward Details</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    2nd Place Reward Details
+                  </label>
                   <input
                     type="text"
                     name="secondPlace"
@@ -919,7 +1028,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">3rd Place Reward Details</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    3rd Place Reward Details
+                  </label>
                   <input
                     type="text"
                     name="thirdPlace"
@@ -934,7 +1045,9 @@ const CreateEvent = () => {
               {/* Special category prizes */}
               <div className="pt-2 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Special Category Prizes</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Special Category Prizes
+                  </h4>
                   <button
                     type="button"
                     onClick={addSpecialPrize}
@@ -945,24 +1058,35 @@ const CreateEvent = () => {
                 </div>
 
                 {eventData.specialCategories.map((spec, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end">
+                  <div
+                    key={idx}
+                    className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end"
+                  >
                     <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Category Name</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Category Name
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Best UI/UX, Best Sponsor API"
                         value={spec.categoryName}
-                        onChange={(e) => handleSpecialPrizeChange(idx, 'categoryName', e.target.value)}
+                        onChange={(e) =>
+                          handleSpecialPrizeChange(idx, 'categoryName', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
                     <div className="flex-[2] flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Prize Description</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Prize Description
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Smart Watch & Cloud Credits"
                         value={spec.prizeDescription}
-                        onChange={(e) => handleSpecialPrizeChange(idx, 'prizeDescription', e.target.value)}
+                        onChange={(e) =>
+                          handleSpecialPrizeChange(idx, 'prizeDescription', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
@@ -979,14 +1103,16 @@ const CreateEvent = () => {
 
               {/* Swag Perks Checklist */}
               <div className="pt-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca] mb-2 block">Participant Swag & Perks</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca] mb-2 block">
+                  Participant Swag & Perks
+                </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-[rgba(8,7,13,0.5)] border border-[rgba(175,172,202,0.1)] rounded-xl">
                   {[
                     { name: 'tshirts', label: 'Free T-Shirts' },
                     { name: 'meals', label: 'Free Meals/Snacks' },
                     { name: 'cloudCredits', label: 'Cloud Credits' },
-                    { name: 'certificates', label: 'Participation Certificates' }
-                  ].map(swag => (
+                    { name: 'certificates', label: 'Participation Certificates' },
+                  ].map((swag) => (
                     <div key={swag.name} className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -996,7 +1122,10 @@ const CreateEvent = () => {
                         onChange={handleSwagChange}
                         className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                       />
-                      <label htmlFor={`swag-${swag.name}`} className="text-xs text-[#afacca] cursor-pointer select-none">
+                      <label
+                        htmlFor={`swag-${swag.name}`}
+                        className="text-xs text-[#afacca] cursor-pointer select-none"
+                      >
                         {swag.label}
                       </label>
                     </div>
@@ -1007,7 +1136,9 @@ const CreateEvent = () => {
               {/* Judging Evaluation Rubric */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Judging Evaluation Rubric (Must equal 100%)</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Judging Evaluation Rubric (Must equal 100%)
+                  </h4>
                   <button
                     type="button"
                     onClick={addJudgingCriteria}
@@ -1018,26 +1149,37 @@ const CreateEvent = () => {
                 </div>
 
                 {eventData.judgingCriteria.map((crit, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end">
+                  <div
+                    key={idx}
+                    className="flex flex-col md:flex-row gap-3 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] items-end"
+                  >
                     <div className="flex-[3] flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Criteria / Dimension Name</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Criteria / Dimension Name
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Technical Complexity, Design, Originality"
                         value={crit.criteriaName}
-                        onChange={(e) => handleJudgingCriteriaChange(idx, 'criteriaName', e.target.value)}
+                        onChange={(e) =>
+                          handleJudgingCriteriaChange(idx, 'criteriaName', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Weightage (%)</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Weightage (%)
+                      </label>
                       <input
                         type="number"
                         placeholder="e.g. 30"
                         min="1"
                         max="100"
                         value={crit.weightage || ''}
-                        onChange={(e) => handleJudgingCriteriaChange(idx, 'weightage', e.target.value)}
+                        onChange={(e) =>
+                          handleJudgingCriteriaChange(idx, 'weightage', e.target.value)
+                        }
                         className="input-field text-xs py-1.5"
                       />
                     </div>
@@ -1051,19 +1193,22 @@ const CreateEvent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           )}
 
           {/* TAB 5: ELIGIBILITY & LOGISTICS */}
           {activeTab === 'logistics' && (
             <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">Eligibility & Support Channels</h3>
+              <h3 className="font-display font-bold text-lg text-white border-b border-[rgba(175,172,202,0.1)] pb-2 mb-4">
+                Eligibility & Support Channels
+              </h3>
 
               {/* Institution and Team limits */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Institution Policy</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Institution Policy
+                  </label>
                   <select
                     name="institutionPolicy"
                     value={eventData.institutionPolicy}
@@ -1083,7 +1228,10 @@ const CreateEvent = () => {
                     onChange={handleInputChange}
                     className="h-4 w-4 rounded bg-[#08070d] border-[rgba(175,172,202,0.2)] text-[#595388]"
                   />
-                  <label htmlFor="interCollegeTeams" className="text-xs text-[#afacca] cursor-pointer select-none font-semibold">
+                  <label
+                    htmlFor="interCollegeTeams"
+                    className="text-xs text-[#afacca] cursor-pointer select-none font-semibold"
+                  >
                     Allow inter-college teams (cross-campus mixes)
                   </label>
                 </div>
@@ -1091,7 +1239,9 @@ const CreateEvent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Minimum Team Size</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Minimum Team Size
+                  </label>
                   <input
                     type="number"
                     name="minTeamSize"
@@ -1102,7 +1252,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Maximum Team Size</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Maximum Team Size
+                  </label>
                   <input
                     type="number"
                     name="maxTeamSize"
@@ -1117,7 +1269,9 @@ const CreateEvent = () => {
               {/* Social Channels */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">Discord Invitation URL</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    Discord Invitation URL
+                  </label>
                   <input
                     type="url"
                     name="discordInvite"
@@ -1128,7 +1282,9 @@ const CreateEvent = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">WhatsApp Support Group URL</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#afacca]">
+                    WhatsApp Support Group URL
+                  </label>
                   <input
                     type="url"
                     name="whatsappInvite"
@@ -1143,7 +1299,9 @@ const CreateEvent = () => {
               {/* Dynamic FAQ list */}
               <div className="pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">Event FAQ Section</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                    Event FAQ Section
+                  </h4>
                   <button
                     type="button"
                     onClick={addFaq}
@@ -1154,7 +1312,10 @@ const CreateEvent = () => {
                 </div>
 
                 {eventData.faqs.map((faq, idx) => (
-                  <div key={idx} className="space-y-2 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative">
+                  <div
+                    key={idx}
+                    className="space-y-2 p-3 rounded-xl border border-[rgba(175,172,202,0.1)] bg-[rgba(8,7,13,0.5)] relative"
+                  >
                     <button
                       type="button"
                       onClick={() => removeFaq(idx)}
@@ -1162,9 +1323,11 @@ const CreateEvent = () => {
                     >
                       <Trash2 size={14} />
                     </button>
-                    
+
                     <div className="flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Question</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Question
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. Will food and hardware be provided?"
@@ -1174,7 +1337,9 @@ const CreateEvent = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">Answer</label>
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-[#afacca]">
+                        Answer
+                      </label>
                       <textarea
                         rows="2"
                         placeholder="e.g. Yes, we will provide meals and standard power supplies, but bring your own laptops and adapters."
@@ -1186,7 +1351,6 @@ const CreateEvent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           )}
 
@@ -1214,9 +1378,7 @@ const CreateEvent = () => {
               )}
             </button>
           </div>
-
         </form>
-
       </div>
     </div>
   );
