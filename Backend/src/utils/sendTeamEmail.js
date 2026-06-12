@@ -529,7 +529,7 @@ const sendTeamEmail = async (options) => {
                             border: 3px solid #000;
                             box-shadow: 4px 4px 0 #ffe500;
                           ">
-                            <a href="http://localhost:5173/dashboard" style="
+                            <a href="${process.env.FRONTEND_URL ? process.env.FRONTEND_URL : 'http://localhost:5173'}/dashboard" style="
                               display: inline-block;
                               padding: 14px 32px;
                               font-family: 'Space Mono', monospace;

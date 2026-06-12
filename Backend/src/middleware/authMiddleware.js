@@ -45,6 +45,9 @@ exports.protect = async (req, res, next) => {
     if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
       const origin = req.headers.origin;
       const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+      if (process.env.FRONTEND_URL) {
+        allowedOrigins.push(process.env.FRONTEND_URL);
+      }
       // If the browser sends an Origin header, check if it matches our allowed origins list
       if (origin && !allowedOrigins.includes(origin)) {
         return res

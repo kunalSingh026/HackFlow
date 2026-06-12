@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -61,7 +63,7 @@ api.interceptors.response.use(
 
       try {
         // Call silent refresh token endpoint (using standard axios to avoid base instance interceptors)
-        await axios.post('http://localhost:3000/api/auth/refresh', {}, { withCredentials: true });
+        await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
 
         // Process queued requests
         processQueue(null);
