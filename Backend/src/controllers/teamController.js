@@ -315,12 +315,10 @@ exports.leaveTeam = async (req, res) => {
     if (!team) return res.status(404).json({ message: 'Team not found.' });
 
     if (team.leader.toString() === userId) {
-      return res
-        .status(400)
-        .json({
-          message:
-            'As the team captain, you cannot leave. You must disband the team or transfer leadership.',
-        });
+      return res.status(400).json({
+        message:
+          'As the team captain, you cannot leave. You must disband the team or transfer leadership.',
+      });
     }
 
     if (!team.members.includes(userId)) {
@@ -525,12 +523,10 @@ exports.rejectInvite = async (req, res) => {
     team.invitedUsers = team.invitedUsers.filter((id) => id.toString() !== userId);
     await team.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: `You have successfully declined the invitation from ${team.name}.`,
-      });
+    res.status(200).json({
+      success: true,
+      message: `You have successfully declined the invitation from ${team.name}.`,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
