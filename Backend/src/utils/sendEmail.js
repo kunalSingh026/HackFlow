@@ -1,11 +1,19 @@
 const nodemailer = require('nodemailer');
+const config = require('../config/config');
 
 const sendEmail = async (options) => {
+  const isSecure = config.SMTP_SECURE === 'true' || config.SMTP_PORT === '465';
+  
   const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    host: config.SMTP_HOST,
+    port: parseInt(config.SMTP_PORT, 10),
+    secure: isSecure,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: config.EMAIL_USER,
+      pass: config.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 

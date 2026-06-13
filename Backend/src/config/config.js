@@ -1,22 +1,35 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-if (!process.env.MONGO_URI) {
+const mongoUri = process.env.MONGO_URI || process.env.Mongo_uri || process.env.mongo_uri;
+const emailUser = process.env.EMAIL_USER || process.env.Email_user || process.env.email_user;
+let emailPass = process.env.EMAIL_PASS || process.env.Email_pass || process.env.email_pass;
+
+if (emailPass) {
+  // Strip any spaces (Google App Passwords are generated with spaces like "abcd efgh ijkl mnop")
+  emailPass = emailPass.replace(/\s+/g, '');
+}
+
+if (!mongoUri) {
   throw new Error('MONGO_URI is not defined in environment variables');
 }
 
-if (!process.env.EMAIL_USER) {
+if (!emailUser) {
   throw new Error('EMAIL_USER is not defined in environment variables');
 }
 
-if (!process.env.EMAIL_PASS) {
+if (!emailPass) {
   throw new Error('EMAIL_PASS is not defined in environment variables');
 }
 
 const config = {
-  MONGO_URI: process.env.MONGO_URI,
-  EMAIL_USER: process.env.EMAIL_USER,
-  EMAIL_PASS: process.env.EMAIL_PASS,
+  MONGO_URI: mongoUri,
+  EMAIL_USER: emailUser,
+  EMAIL_PASS: emailPass,
+  SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
+  SMTP_PORT: process.env.SMTP_PORT || '465',
+  SMTP_SECURE: process.env.SMTP_SECURE || 'true',
 };
 
 module.exports = config;
+

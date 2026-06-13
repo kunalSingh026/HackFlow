@@ -1,18 +1,19 @@
 const nodemailer = require('nodemailer');
+const config = require('../config/config');
 
 const sendTicketEmail = async (options) => {
+  const isSecure = config.SMTP_SECURE === 'true' || config.SMTP_PORT === '465';
+
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT) || 465,
-    secure:
-      process.env.SMTP_SECURE === 'true' ||
-      (!process.env.SMTP_SECURE && (parseInt(process.env.SMTP_PORT) || 465) === 465),
+    host: config.SMTP_HOST,
+    port: parseInt(config.SMTP_PORT, 10),
+    secure: isSecure,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: config.EMAIL_USER,
+      pass: config.EMAIL_PASS,
     },
     tls: {
-      rejectUnauthorized: process.env.NODE_ENV === 'production',
+      rejectUnauthorized: false,
     },
   });
 
