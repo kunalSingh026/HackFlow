@@ -3,7 +3,7 @@ const config = require('../config/config');
 
 const sendEmail = async (options) => {
   const isSecure = config.SMTP_SECURE === 'true' || config.SMTP_PORT === '465';
-  
+
   const transporter = nodemailer.createTransport({
     host: config.SMTP_HOST,
     port: parseInt(config.SMTP_PORT, 10),
