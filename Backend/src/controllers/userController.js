@@ -59,7 +59,7 @@ exports.updateProfile = async (req, res) => {
       if (typeof techStackTags === 'string' && techStackTags.startsWith('[')) {
         try {
           tempTechStack = JSON.parse(techStackTags);
-        } catch (e) {
+        } catch {
           tempTechStack = techStackTags;
         }
       }
@@ -77,7 +77,7 @@ exports.updateProfile = async (req, res) => {
     if (typeof links === 'string') {
       try {
         incomingLinks = JSON.parse(links);
-      } catch (e) {
+      } catch {
         incomingLinks = {};
       }
     }
@@ -86,7 +86,7 @@ exports.updateProfile = async (req, res) => {
     if (typeof education === 'string') {
       try {
         incomingEducation = JSON.parse(education);
-      } catch (e) {
+      } catch {
         incomingEducation = {};
       }
     }

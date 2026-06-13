@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const User = require('../models/user.model');
 const BlacklistedToken = require('../models/blacklistedToken.model');
 
@@ -57,7 +56,7 @@ exports.protect = async (req, res, next) => {
     }
 
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({ message: 'Not authorized, token failed or expired' });
   }
 };
