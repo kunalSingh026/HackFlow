@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '.env.test') });
 
 const User = require('./src/models/user.model');
 const userController = require('./src/controllers/userController');

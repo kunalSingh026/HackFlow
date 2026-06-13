@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '.env.test') });
 
 const User = require('./src/models/user.model');
 const RefreshToken = require('./src/models/refreshToken.model');
