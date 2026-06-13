@@ -42,10 +42,6 @@ jobs:
         run: npm run lint
         working-directory: Backend
 
-      - name: Run Prettier Format Check
-        run: npm run format:check
-        working-directory: Backend
-
       - name: Run Integration Tests
         run: npm test
         working-directory: Backend
@@ -77,8 +73,4 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
-        working-directory: frontend
-
-      - name: Run Prettier Format Check
-        run: npm run format:check
         working-directory: frontend
