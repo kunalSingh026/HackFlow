@@ -1,4 +1,5 @@
 const { sendEmail: sendResendEmail } = require('../config/email');
+const config = require('../config/config');
 
 const sendTeamEmail = async (options) => {
   let subject = '';
