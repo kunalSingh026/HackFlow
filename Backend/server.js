@@ -18,11 +18,20 @@ const { connectDB } = require('./src/config/db');
 const { verifyEmailConfig } = require('./src/config/email');
 const app = require('./src/app');
 
-// Database Connection
-connectDB();
+// Start the server
+const startServer = async () => {
+  // Database Connection
+  await connectDB();
 
-// Verify SMTP connection
-verifyEmailConfig();
+  // Verify SMTP connection (resolves SMTP host to IPv4 first)
+  await verifyEmailConfig();
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+};
+
+startServer().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
+

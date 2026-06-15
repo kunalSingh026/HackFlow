@@ -1,4 +1,4 @@
-const { transporter } = require('../config/email');
+const { getTransporter } = require('../config/email');
 const config = require('../config/config');
 
 const sendTicketEmail = async (options) => {
@@ -73,6 +73,7 @@ const sendTicketEmail = async (options) => {
       },
     ],
   };
+  const transporter = await getTransporter();
   await transporter.sendMail(mailOptions);
 };
 module.exports = sendTicketEmail;

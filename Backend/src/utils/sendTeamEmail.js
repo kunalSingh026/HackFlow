@@ -1,5 +1,5 @@
 const config = require('../config/config');
-const { transporter } = require('../config/email');
+const { getTransporter } = require('../config/email');
 
 const sendTeamEmail = async (options) => {
   let subject = '';
@@ -597,6 +597,7 @@ const sendTeamEmail = async (options) => {
     html: htmlTemplate,
   };
 
+  const transporter = await getTransporter();
   await transporter.sendMail(mailOptions);
 };
 
