@@ -46,8 +46,8 @@ const config = {
   JWT_REFRESH_SECRET: jwtRefreshSecret,
   FRONTEND_URL: frontendUrl,
   SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
-  SMTP_PORT: process.env.SMTP_PORT || '465',
-  SMTP_SECURE: process.env.SMTP_SECURE || 'true',
+  SMTP_PORT: process.env.SMTP_PORT || '587',
+  SMTP_SECURE: process.env.SMTP_SECURE || 'false',
 };
 
 module.exports = config;

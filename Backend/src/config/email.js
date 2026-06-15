@@ -19,6 +19,7 @@ const getTransporter = async () => {
     host: config.SMTP_HOST,
     port: parseInt(config.SMTP_PORT, 10),
     secure: isSecure,
+    requireTLS: !isSecure,
     auth: {
       user: config.EMAIL_USER,
       pass: config.EMAIL_PASS,
