@@ -1,40 +1,100 @@
 # 🌌 HackFlow
-
 <div align="center">
-
-![HackFlow Logo](https://img.shields.io/badge/HackFlow-10.0.0-blueviolet?style=for-the-badge&logo=github&logoColor=white)
-![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-blue?style=for-the-badge&logo=node.js&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![React 19](https://img.shields.io/badge/react-19.x-cyan.svg?style=for-the-badge&logo=react&logoColor=white)
-![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-
-**HackFlow** is a premium, feature-rich, full-stack hackathon management and evaluation platform. Engineered with a secure Role-Based Access Control (RBAC) architecture, it streamlines every phase of a hackathon: from dynamic team formation and automated QR-ticket check-ins to multi-criteria judging and mathematically compiled live leaderboards.
-
-[Key Features](#-key-features) • [Tech Stack](#-tech-stack) • [System Flow](#-system-flow) • [API Directory](#-api-directory) • [Getting Started](#-getting-started) • [Environment Settings](#-environment-settings)
-
+![HackFlow Banner](https://img.shields.io/badge/HackFlow-Production--Ready-6366F1?style=for-the-badge&logo=codeforces&logoColor=white)
+[![Frontend Deploy](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hackflow-client.vercel.app)
+[![Backend Status](https://img.shields.io/badge/API_Gateway-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://hackflow-api.onrender.com)
+[![Docker Support](https://img.shields.io/badge/Docker-Compatible-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#-docker-deployment)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](https://opensource.org/licenses/MIT)
+**HackFlow** is a premium, feature-rich, full-stack hackathon management and evaluation platform. Engineered with a secure Role-Based Access Control (RBAC) architecture, it streamlines every phase of a hackathon: from dynamic team matchmaking and automated QR-ticket check-ins via mobile cameras, to multi-criteria judging and mathematically compiled live leaderboards.
+[Key Features](#-key-features) • [System Flow](#-system-flow) • [Tech Stack](#-tech-stack) • [Live Demo & Testing](#-live-demo--testing) • [API Directory](#-api-directory) • [Getting Started](#-getting-started) • [Security & Production](#-security--production)
 </div>
-
 ---
-
+## ⚡ Live Demo & Testing
+You can access the production-ready build of HackFlow using the following links:
+*   **🖥️ Live Client Web App:** [https://hack-flow-rust.vercel.app/](https://hack-flow-rust.vercel.app/) *(Hosted on Vercel)*
+*   **⚙️ Live API Gateway:** [https://hackflow-api.onrender.com](https://hackflow-api.onrender.com) *(Hosted on Render)*
+> [!TIP]
+> If you are deploying the project on your own custom Vercel/Render accounts, replace the URLs above with your unique domains.
+### 👥 Quick-Start Test Accounts
+To explore the dashboard interfaces and experience the RBAC permissions system without registering new accounts, use these pre-configured credentials:
+|
+ Role 
+|
+ Email Address 
+|
+ Password 
+|
+ Privileges / Features 
+|
+|
+:---
+|
+:---
+|
+:---
+|
+:---
+|
+|
+**
+Administrator
+**
+|
+`admin@hackflow.com`
+|
+`AdminPass123!`
+|
+ Create events, scanner check-in, assign judges, lock/publish leaderboards 
+|
+|
+**
+Judge
+**
+|
+`judge@hackflow.com`
+|
+`JudgePass123!`
+|
+ Evaluation portal, rate submissions on custom weighted criteria 
+|
+|
+**
+Participant
+**
+|
+`captain@hackflow.com`
+|
+`TeamPass123!`
+|
+ Matchmaking, join/create teams, submit projects and repositories 
+|
+---
 ## ✨ Key Features
-
-### 👤 User Personas & RBAC
-HackFlow enforces strict security via **Role-Based Access Control (RBAC)** across three distinct user roles:
-*   **Participants / Teams:** Build profiles, showcase portfolios, find team members, register for hackathons, and submit final projects.
-*   **Judges:** Access a dedicated judging dashboard to evaluate team submissions based on event-specific criteria.
-*   **Administrators:** Manage events, issue announcements, check-in attendees, override scores, and lock/publish final leaderboards.
-
+### 👤 Role-Based Access Control (RBAC)
+Strict API shields enforce specific boundaries around three roles:
+*   **Participants / Teams:** Build profiles, showcase portfolios, invite team members, register for hackathons, and submit final projects.
+*   **Judges:** Evaluate project submissions using dedicated visual dashboards with event-specific criteria.
+*   **Administrators:** Manage events, broadcast announcements, scan check-in tickets, and lock/publish leaderboards.
+### 🎫 Automated QR Ticketing & Mobile Check-in
+*   **Secure Ticket Dispatch:** Upon registering for an event, the backend compiles a unique ID into a base64 QR Code.
+*   **Resend API Mailer:** Instantly sends high-fidelity confirmation emails containing the inline QR ticket using the Resend HTTP API.
+*   **In-Browser Camera Scanner:** Administrators can use a built-in mobile camera scanner on-site to verify tickets via `/api/events/:eventId/checkin/:registrationId`, recording attendance in real-time.
+### 👥 Matchmaking & Team Dynamics
+*   **Available Talents Search:** Search and filter active participants by skills, interests, and availability.
+*   **Invite Pipeline:** Send invitations or review incoming requests. Captains have sole authority to invite members, remove members, or submit links.
+### ⚖️ Multi-Criteria Judging & Live Standings
+*   **Weighted Scoring:** Evaluates projects using customized parameters (e.g., *Innovation, Technicality, Design, Pitch*).
+*   **Locked Grades:** Prevent scores from being modified after administrators publish the final results.
+*   **Mathematical Sorting:** Leaderboards auto-calculate overall weighted score totals in real-time.
 ---
-
-### 🚀 Core Modules
-
+## 🔄 System Flow
 ```mermaid
 graph TD
     User([Participant]) -->|Register / Login| Auth[Auth Service]
     User -->|Create / Join Team| Team[Team Matchmaking]
     User -->|Register to Event| Register[Event Registration]
     Register -->|Generate QR Code| QR[QR Ticket Service]
-    QR -->|Email Ticket| Nodemailer[SMTP Emailer]
+    QR -->|Email Ticket| Resend[Resend API Gateway]
     
     Admin([Admin]) -->|Create Event| EventAdmin[Event Admin Control]
     Admin -->|Scan QR Ticket| CheckIn[Gate Check-In Portal]
@@ -47,179 +107,150 @@ graph TD
     
     Admin -->|Lock & Publish| Leaderboard[Dynamic Leaderboard]
     Scores -->|Rank Teams| Leaderboard
-```
+🛠️ Tech Stack
+Layer	Technologies	Key Capabilities
+Frontend	React 19, Vite, Tailwind CSS v4, Framer Motion	Fluid layouts, modern visual components, rapid HMR bundling.
+Routing	React Router v7	Dynamic, component-driven client-side routing.
+QR Scan	HTML5-QRCode	Native device camera bindings with high-performance framing.
+Backend	Node.js, Express.js v5	Asynchronous REST API, modular router layers.
+Database	MongoDB & Mongoose ORM	Document schemas, validation models, and aggregation indices.
+Emails	Resend API SDK	Fast email delivery over Port 443, bypassing SMTP blockades.
+Storage	Multer & Cloudinary SDK	Secure cloud media uploads for user avatars and event banners.
+Monitoring	Sentry Node SDK	Performance profiling and real-time backend error capturing.
+📂 Project Architecture
 
-#### 🎫 1. Automated QR Code Ticketing & Mobile Check-in
-*   **Automated Generation:** On registration, the backend generates a unique `registrationId` and compiles it into a secure QR Code data URI.
-*   **Instant Mailout:** Nodemailer triggers a high-fidelity ticket email directly to the participant.
-*   **Gate Scanning:** Administrators can scan tickets using a built-in QR camera reader that connects directly to the `/api/events/:eventId/checkin/:registrationId` endpoint, logging check-in times in real-time and preventing duplicate entries.
 
-#### 👥 2. Matchmaking & Team Dynamics
-*   **Matchmaking Search:** Search for available participants filtered by skills and interests.
-*   **Invites & Applications:** Team captains can invite members or approve pending join requests.
-*   **Project Submission:** CAPTAINS can upload repository links, video demonstrations, and descriptions prior to the lockdown timeline.
-
-#### ⚖️ 3. Multi-Criteria Judging Portal
-*   **Granular Metrics:** Judges rate projects across custom parameters (e.g., *Innovation, Implementation, Design, Pitch*).
-*   **Weighted Scoring:** Standardized inputs ensure calculations are managed securely on the backend.
-*   **Submissions Pipeline:** An elegant, distraction-free grid displays all submissions along with quick links to live projects, slide decks, and repositories.
-
-#### 🏆 4. Live Ranked Leaderboard
-*   **Real-time Calculations:** Scores are aggregated, weighted, and sorted automatically.
-*   **Publish Control:** Administrators maintain complete authority to review, lock, and publish leaderboards once judging is concluded.
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend Architecture
-*   **Framework:** [React 19](https://react.dev/) with [Vite](https://vite.dev/)
-*   **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
-*   **Animations:** [Framer Motion](https://www.framer.com/motion/) for fluid transitions
-*   **Routing:** [React Router v7](https://reactrouter.com/)
-*   **QR Scanner:** [HTML5-QRCode](https://github.com/mebjas/html5-qrcode) for high-performance camera processing
-*   **Icons:** [Lucide React](https://lucide.dev/)
-
-### Backend Services
-*   **Runtime:** [Node.js](https://nodejs.org/) & [Express.js v5](https://expressjs.com/)
-*   **Database:** [MongoDB](https://www.mongodb.com/) via [Mongoose ORM](https://mongoosejs.com/)
-*   **Authentication:** JWT with Access/Refresh token rotation and HTTP-only cookie storage
-*   **File Uploads:** [Multer](https://github.com/expressjs/multer) & [Cloudinary SDK](https://cloudinary.com/) for cloud media storage
-*   **Monitoring:** [Sentry](https://sentry.io/) node instrumentation for real-time crash reports
-*   **Security:** [Helmet](https://helmetjs.github.io/) headers and [Express-Rate-Limit](https://www.npmjs.com/package/express-rate-limit) to thwart DDoS attempts
-
----
-
-## 📂 Project Structure
-
-```
 HackFlow/
-├── Backend/                 # Express Server & DB Handlers
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions continuous integration testing
+├── Backend/                 # Express REST Server
 │   ├── src/
-│   │   ├── config/          # Database & configuration files
-│   │   ├── controllers/     # Core route controllers (Auth, Event, Team...)
-│   │   ├── middleware/      # Auth shields, file upload configs, rate-limiters
-│   │   ├── models/          # Mongoose collection schemas
-│   │   ├── routes/          # Express route endpoints
-│   │   └── utils/           # Nodemailer HTML template generators
-│   ├── server.js            # Server entry point & DB connector
-│   └── Dockerfile           # Backend containerization file
-│
-├── frontend/                # React Vite SPA
-│   ├── public/              # Static assets & SVGs
+│   │   ├── config/          # Database connection, Resend, & Cloudinary configurations
+│   │   ├── controllers/     # Controller handlers (Auth, Event, Team, Evaluation, User)
+│   │   ├── middleware/      # Authentication, file upload, & validation middleware
+│   │   ├── models/          # Mongoose DB schemas (Event, Team, User, Registration, Evaluation)
+│   │   ├── routes/          # Express Router mounts (Auth, User, Admin, Event, Team)
+│   │   └── utils/           # HTML email templates and delivery helpers
+│   ├── server.js            # Node App starting script
+│   └── Dockerfile           # Production container compilation settings
+├── frontend/                # React SPA Client
 │   ├── src/
-│   │   ├── api/             # Axios interceptor configurations
-│   │   ├── components/      # Global components (dashboards, scanners...)
-│   │   ├── context/         # AuthContext & global states
-│   │   ├── pages/           # Pages (Admin, Leaderboard, Profiles...)
-│   │   ├── index.css        # Tailwind configuration & global styles
-│   │   └── App.jsx          # Route configuration mapping
+│   │   ├── api/             # Axios configuration with response interceptors
+│   │   ├── components/      # Modular UI widgets, navigation bars, & camera scanners
+│   │   ├── context/         # AuthContext state provider (token renewal & sessions)
+│   │   ├── pages/           # Pages (Admin, Leaderboard, Profiles, Event Dashboards)
+│   │   └── index.css        # Tailwind directives and customized CSS variables
+│   ├── vercel.json          # SPA routing redirect file for Vercel deployment
 │   └── vite.config.js       # Vite build configurations
-```
+🔌 API Directory
+Authentication
+POST /api/auth/register - Create user credentials (initial verification status: unverified)
+POST /api/auth/verify-email - Verify email address using temporary token
+POST /api/auth/login - Authenticate, set JWT cookies (Access & Refresh tokens)
+POST /api/auth/refresh - Rotate expired Access tokens using a valid Refresh token
+POST /api/auth/logout - Clear cookies and terminate session
+User Profiles
+GET /api/users/profile/:username - Public page profile details
+PUT /api/users/profile - Update fields (skills, bio, github) and upload profile avatars
+Hackathon Events
+GET /api/events - List upcoming and active hackathons
+GET /api/events/:eventId - Event information details
+POST /api/events - [Admin Only] Create a new hackathon event
+PUT /api/events/:eventId - [Host/Admin] Edit description, timeline parameters
+POST /api/events/:eventId/register - Participant register for a hackathon
+POST /api/events/:eventId/checkin/:registrationId - [Admin Only] Scan/Verify ticket registration
+GET /api/events/public-stats - Dashboard statistics summary endpoint
+Team Management
+GET /api/teams/my-team - Fetch current user's team details
+POST /api/teams/event/:eventId - Register a new team
+POST /api/teams/:teamId/invite/:userId - [Captain Only] Send invitation to join
+POST /api/teams/:teamId/accept-invite - Accept invitation and join team
+POST /api/teams/:teamId/reject-invite - Reject invitation
+POST /api/teams/:teamId/leave - Leave current team (disallowed 24h prior to start)
+POST /api/teams/:teamId/remove/:userId - [Captain Only] Remove member from team
+DELETE /api/teams/:teamId - [Captain Only] Disband team
+PUT /api/teams/:teamId/submit - [Captain Only] Submit repository URLs, deck, and video demo
+GET /api/teams/event/:eventId/participants - Find available participants for matchmaking
+Evaluation & Leaderboards
+GET /api/events/:eventId/submissions - [Judge Only] List submitted projects
+POST /api/teams/:teamId/evaluate - [Judge Only] Rate submission based on criteria
+GET /api/events/:eventId/leaderboard - Fetch ranked standings
+PUT /api/events/:eventId/publish-leaderboard - [Admin Only] Lock grading and publish rankings
+Administration (Global Panel)
+GET /api/admin/users - [Admin Only] List all users
+PUT /api/admin/users/:userId/role - [Admin Only] Modify user role permissions
+PUT /api/admin/users/:userId/ban - [Admin Only] Ban/Unban user profile
+POST /api/admin/events/:eventId/itinerary - [Admin Only] Add agenda schedules to timeline
+PUT /api/admin/events/:eventId/judges - [Admin Only] Assign judges array to event
+GET /api/admin/events - [Admin Only] View all events admin panel
+🔑 Environment Settings
+Create a .env configuration file in the /Backend directory:
 
----
+env
 
-## 🔌 API Directory
 
-| Category | Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| **Authentication** | `POST` | `/api/auth/register` | Public | Register a new user |
-| | `POST` | `/api/auth/verify-email` | Public | Verify user email address |
-| | `POST` | `/api/auth/login` | Public | Auth user & set token cookies |
-| | `POST` | `/api/auth/refresh` | Public | Rotate expired access token |
-| | `POST` | `/api/auth/logout` | Public | Clear HTTP-only session cookies |
-| **User Profiles** | `PUT` | `/api/users/profile` | Private | Update profile & upload avatar |
-| | `GET` | `/api/users/profile/:username` | Public | Fetch public portfolio details |
-| **Events** | `GET` | `/api/events` | Public | List all upcoming/active events |
-| | `POST` | `/api/events` | Admin Only | Create a new event |
-| | `PUT` | `/api/events/:eventId` | Host/Admin | Edit event settings & timelines |
-| | `POST` | `/api/events/:eventId/register` | Private | Register participant for event |
-| | `POST` | `/api/events/:eventId/checkin/:regId` | Admin Only | Check-in participant via QR Code |
-| **Teams** | `POST` | `/api/teams/event/:eventId` | Registered | Create a team for an event |
-| | `POST` | `/api/teams/:teamId/invite/:userId` | Captain Only | Invite participant to team |
-| | `POST` | `/api/teams/:teamId/accept-invite` | Invited | Join team from notification |
-| | `PUT` | `/api/teams/:teamId/submit` | Captain Only | Submit project files/URLs |
-| **Evaluation** | `POST` | `/api/teams/:teamId/evaluate` | Judge Only | Submit project scores |
-| | `GET` | `/api/events/:eventId/leaderboard` | Private | View live standings |
-| | `PUT` | `/api/events/:eventId/publish-leaderboard`| Admin Only | Publish standings & lock grades |
-
----
-
-## 🔑 Environment Settings
-
-Create a `.env` file in the **Backend/** directory:
-
-```env
-# Server Configuration
+# Server configs
 PORT=5000
 NODE_ENV=development
-
 # Database
-MONGO_URI=your_mongodb_connection_string
-
-# Authentication Secrets
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/hackflow
+# Double JWT Secret Keys (Recommended at least 32 bytes)
 JWT_SECRET=your_jwt_access_secret_key
 JWT_REFRESH_SECRET=your_jwt_refresh_secret_key
-
-# Cloudinary Storage
+# Resend API Service Key
+RESEND_API_KEY=re_your_resend_api_key
+# Cloudinary Media Storage (Optional, required for avatar uploads)
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-
-# SMTP Email Settings
-EMAIL_USER=your_smtp_email@gmail.com
-EMAIL_PASS=your_smtp_app_password
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=465
-SMTP_SECURE=true
-
-# Error Monitoring (Optional)
+# Sentry Monitoring (Optional)
 SENTRY_DSN=your_sentry_dsn_url
+🚀 Getting Started
+1. Prerequisites
+Install Node.js LTS (version 20 or 22) and MongoDB locally.
+
+2. Backend Server Setup
+Navigate to the Backend directory, install package dependencies, and run in dev mode:
+
+bash
+
+
+cd Backend
+npm install
+npm run dev
+The server will bind to http://localhost:5000 (or the configured PORT).
+
+3. Frontend Client Setup
+Navigate to the frontend directory, install packages, and initialize:
+
+bash
+
+
+cd ../frontend
+npm install
+npm run dev
+The client app will open on http://localhost:5173.
+
+🐳 Docker Deployment
+To spin up a containerized environment for the backend:
+
+Build the Docker Image:
+bash
+
+
+cd Backend
+docker build -t hackflow-backend .
+Run the Container:
+bash
+
+
+docker run -d -p 3000:3000 --env-file .env hackflow-backend
+🔒 Security & Production
+HTTP-Only Cookies: Auth cookies are set with httpOnly: true, secure: true, and sameSite: 'strict' to safeguard tokens from Cross-Site Scripting (XSS) extraction.
+Double-Token Auth: Utilizes short-lived Access tokens paired with database-tracked Refresh tokens.
+Secure Headers: Protects endpoints against exploitation by serving standard security headers via Helmet.
+API Rate Limiting: Rate limiting limits bulk automated scans. Auth routes are further limited to prevent brute-force attacks.
+Proxy Configuration: In production environments behind reverse proxies (like Render or Cloudflare), the Express server trusts the X-Forwarded-For headers (app.set('trust proxy', 1)) to ensure rate limiting calculates origin IPs correctly.
+Made with ❤️ by Kunal Kumar Singh.
 ```
-
----
-
-## 🚀 Getting Started
-
-### Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd Backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Initialize the server:
-   ```bash
-   npm run dev
-   ```
-   *The API server will launch on `http://localhost:5000` (or your configured `PORT`).*
-
-### Frontend Setup
-1. Open a new terminal and navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-   *The web client will load on `http://localhost:5173`.*
-
----
-
-## 🔒 Security Practices
-*   **Security Headers:** Express app is protected using Helmet middleware configured to enforce strict CSP, HSTS, and frame protection.
-*   **Rate Limiting:** Global rate limiters are set to 100 requests per 15 minutes, with specialized stricter limitations for authentication points to safeguard against brute-force attacks.
-*   **Token Rotation:** Uses double-token JWT authentication logic. Short-lived Access Tokens are paired with secure database-tracked Refresh Tokens, allowing seamless re-authorization while remaining resilient against token hijacking.
-
----
-
-<div align="center">
-Made by Kunal Kumar Singh.
-</div>
