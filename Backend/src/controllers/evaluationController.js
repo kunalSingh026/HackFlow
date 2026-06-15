@@ -4,6 +4,7 @@ const Event = require('../models/event.model');
 const Registration = require('../models/registration.model');
 const sendLeaderboardEmail = require('../utils/sendLeaderboardEmail');
 const mongoose = require('mongoose');
+const config = require('../config/config');
 
 /**
  * @description Get all submitted projects for an event (Judging Dashboard)
@@ -222,7 +223,7 @@ exports.publishLeaderboard = async (req, res) => {
       status: 'registered',
     }).populate('user');
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const frontendUrl = config.FRONTEND_URL;
     const leaderboardLink = `${frontendUrl}/events/${eventId}/leaderboard`;
 
     // Send emails asynchronously in the background

@@ -1,22 +1,7 @@
-const nodemailer = require('nodemailer');
+const { transporter } = require('../config/email');
 const config = require('../config/config');
 
 const sendLeaderboardEmail = async (options) => {
-  const isSecure = config.SMTP_SECURE === 'true' || config.SMTP_PORT === '465';
-
-  const transporter = nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: parseInt(config.SMTP_PORT, 10),
-    secure: isSecure,
-    auth: {
-      user: config.EMAIL_USER,
-      pass: config.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
   const htmlTemplate = `
     <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #08070d; color: #f7f6f0; padding: 40px 20px; text-align: center;">
         <div style="max-width: 600px; margin: 0 auto; background: rgba(89, 83, 136, 0.1); border: 1px solid rgba(175, 172, 202, 0.2); border-radius: 20px; padding: 40px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
@@ -46,7 +31,7 @@ const sendLeaderboardEmail = async (options) => {
     `;
 
   const mailOptions = {
-    from: 'HackFlow Team <noreply@hackflow.com>',
+    from: `HackFlow Team <${config.EMAIL_USER}>`,
     to: options.email,
     subject: `🏆 Results are Live for ${options.eventTitle}!`,
     html: htmlTemplate,

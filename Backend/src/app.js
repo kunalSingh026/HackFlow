@@ -17,16 +17,35 @@ app.set('trust proxy', 1);
 
 app.use(helmet());
 
+const config = require('./config/config');
+
 // Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL
-      ? [process.env.FRONTEND_URL]
-      : ['http://localhost:5173', 'http://localhost:5174'],
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? [config.FRONTEND_URL]
+        : [config.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5174'],
     credentials: true,
   })
 );
-app.use(express.json());
+
+// Response interceptor middleware to sanitize error details in production
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  res.json = function (data) {
+    if (process.env.NODE_ENV === 'production' && data && typeof data === 'object') {
+      if ('error' in data) {
+        data.error = undefined; // Strip detailed error messages in production
+      }
+    }
+    return originalJson.call(this, data);
+  };
+  next();
+});
+
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 app.use(morgan('dev'));
@@ -46,7 +65,7 @@ const authLimiter = rateLimit({
 });
 
 app.use('/api/', globalLimiter);
-// app.use('/api/auth', authLimiter);
+app.use('/api/auth', authLimiter);
 
 // Mount the routes
 app.use('/api/auth', authRoutes);

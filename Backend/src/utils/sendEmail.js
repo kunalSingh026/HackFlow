@@ -1,22 +1,7 @@
-const nodemailer = require('nodemailer');
+const { transporter } = require('../config/email');
 const config = require('../config/config');
 
 const sendEmail = async (options) => {
-  const isSecure = config.SMTP_SECURE === 'true' || config.SMTP_PORT === '465';
-
-  const transporter = nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: parseInt(config.SMTP_PORT, 10),
-    secure: isSecure,
-    auth: {
-      user: config.EMAIL_USER,
-      pass: config.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
   // The HTML Template
   const htmlTemplate = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -33,7 +18,7 @@ const sendEmail = async (options) => {
 
   //Define the email options
   const mailOptions = {
-    from: 'HackFlow Team <noreply@hackflow.com>', //Makes it look professional in the inbox
+    from: `HackFlow Team <${config.EMAIL_USER}>`,
     to: options.email,
     subject: options.subject,
     html: htmlTemplate,

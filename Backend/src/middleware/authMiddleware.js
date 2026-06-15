@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const BlacklistedToken = require('../models/blacklistedToken.model');
+const config = require('../config/config');
 
 exports.protect = async (req, res, next) => {
   let token;
@@ -33,7 +34,7 @@ exports.protect = async (req, res, next) => {
     }
 
     // 4. Verify token cryptographically
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
     req.user = await User.findById(decoded.id).select('-password');
 
     if (!req.user) {
@@ -43,10 +44,11 @@ exports.protect = async (req, res, next) => {
     // 5. CSRF Protection for state-modifying requests
     if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
       const origin = req.headers.origin;
-      const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
-      if (process.env.FRONTEND_URL) {
-        allowedOrigins.push(process.env.FRONTEND_URL);
-      }
+      const allowedOrigins =
+        process.env.NODE_ENV === 'production'
+          ? [config.FRONTEND_URL]
+          : [config.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5174'];
+
       // If the browser sends an Origin header, check if it matches our allowed origins list
       if (origin && !allowedOrigins.includes(origin)) {
         return res

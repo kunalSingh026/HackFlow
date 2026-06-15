@@ -25,6 +25,7 @@ const {
   getLeaderboard,
   publishLeaderboard,
 } = require('../controllers/evaluationController');
+const { validateCreateEvent } = require('../middleware/validateMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
 /**
@@ -37,15 +38,13 @@ router.get('/my-registrations', protect, getMyRegistrations);
 router.get('/judge/assigned', protect, getAssignedEvents);
 router.get('/public-stats', getPublicStats);
 router.get('/:eventId', getEventById);
-router.post('/', protect, authorizeRoles('admin'), createEvent);
-router.post('/:eventId/register', protect, registerForEvent);
 
 /**
  * @route POST /api/events
  * @description Create a new hackathon
  * @access Private (Admin Only)
  */
-router.post('/', protect, authorizeRoles('admin'), createEvent);
+router.post('/', protect, authorizeRoles('admin'), validateCreateEvent, createEvent);
 
 router.post('/:eventId/register', protect, registerForEvent);
 

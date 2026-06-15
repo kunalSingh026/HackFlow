@@ -1,22 +1,7 @@
-const nodemailer = require('nodemailer');
+const { transporter } = require('../config/email');
 const config = require('../config/config');
 
 const sendTicketEmail = async (options) => {
-  const isSecure = config.SMTP_SECURE === 'true' || config.SMTP_PORT === '465';
-
-  const transporter = nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: parseInt(config.SMTP_PORT, 10),
-    secure: isSecure,
-    auth: {
-      user: config.EMAIL_USER,
-      pass: config.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
   const htmlTemplate = `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 40px 20px;">
     <!-- Ticket Container -->
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 650px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
@@ -75,7 +60,7 @@ const sendTicketEmail = async (options) => {
   const base64Data = options.qrCodeDataUri.split('base64,')[1];
 
   const mailOptions = {
-    from: 'HackFlow Team <noreply@hackflow.com>',
+    from: `HackFlow Team <${config.EMAIL_USER}>`,
     to: options.email,
     subject: `Your Ticket for ${options.eventTitle} 🎟️`,
     html: htmlTemplate,

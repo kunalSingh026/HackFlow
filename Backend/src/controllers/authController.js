@@ -8,6 +8,7 @@ const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 const RefreshToken = require('../models/refreshToken.model');
 const BlacklistedToken = require('../models/blacklistedToken.model');
+const config = require('../config/config');
 
 const getCookieOptions = (maxAgeMs) => ({
   httpOnly: true,
@@ -169,11 +170,11 @@ exports.loginUser = async (req, res) => {
 
     const accessToken = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
+      config.JWT_SECRET,
       { expiresIn: '15m' } // Access token lasts 15 minutes
     );
 
-    const refreshSecret = process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET + '_refresh';
+    const refreshSecret = config.JWT_REFRESH_SECRET;
     const refreshToken = jwt.sign(
       { id: user._id, salt: crypto.randomBytes(16).toString('hex') },
       refreshSecret,
@@ -384,7 +385,7 @@ exports.refreshToken = async (req, res) => {
       return res.status(401).json({ message: 'Refresh token not found' });
     }
 
-    const refreshSecret = process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET + '_refresh';
+    const refreshSecret = config.JWT_REFRESH_SECRET;
 
     let decoded;
     try {
@@ -430,7 +431,7 @@ exports.refreshToken = async (req, res) => {
     }
 
     // Generate new tokens
-    const newAccessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+    const newAccessToken = jwt.sign({ id: user._id, role: user.role }, config.JWT_SECRET, {
       expiresIn: '15m',
     });
 

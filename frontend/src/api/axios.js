@@ -2,6 +2,10 @@ import axios from 'axios';
 
 const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+if (import.meta.env.PROD && !import.meta.env.VITE_API_URL) {
+  console.warn('WARNING: VITE_API_URL is not defined in the production environment. Falling back to localhost api endpoint.');
+}
+
 const api = axios.create({
   baseURL,
   withCredentials: true,
