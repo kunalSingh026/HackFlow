@@ -83,3 +83,31 @@ graph TD
     
     Admin -->|Lock & Publish| Leaderboard[Dynamic Leaderboard]
     Scores -->|Rank Teams| Leaderboard
+```
+
+## 📂 Project Architecture
+
+HackFlow/
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions continuous integration testing
+├── Backend/                 # Express REST Server
+│   ├── src/
+│   │   ├── config/          # Database connection, Resend, & Cloudinary configurations
+│   │   ├── controllers/     # Controller handlers (Auth, Event, Team, Evaluation, User)
+│   │   ├── middleware/      # Authentication, file upload, & validation middleware
+│   │   ├── models/          # Mongoose DB schemas (Event, Team, User, Registration, Evaluation)
+│   │   ├── routes/          # Express Router mounts (Auth, User, Admin, Event, Team)
+│   │   └── utils/           # HTML email templates and delivery helpers
+│   ├── server.js            # Node App starting script
+│   └── Dockerfile           # Production container compilation settings
+├── frontend/                # React SPA Client
+│   ├── src/
+│   │   ├── api/             # Axios configuration with response interceptors
+│   │   ├── components/      # Modular UI widgets, navigation bars, & camera scanners
+│   │   ├── context/         # AuthContext state provider (token renewal & sessions)
+│   │   ├── pages/           # Pages (Admin, Leaderboard, Profiles, Event Dashboards)
+│   │   └── index.css        # Tailwind directives and customized CSS variables
+│   ├── vercel.json          # SPA routing redirect file for Vercel deployment
+│   └── vite.config.js       # Vite build configurations
+
