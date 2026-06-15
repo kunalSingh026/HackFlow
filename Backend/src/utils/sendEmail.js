@@ -1,5 +1,4 @@
-const { getTransporter } = require('../config/email');
-const config = require('../config/config');
+const { sendEmail: sendResendEmail } = require('../config/email');
 
 const sendEmail = async (options) => {
   // The HTML Template
@@ -16,16 +15,11 @@ const sendEmail = async (options) => {
         </div>
     `;
 
-  //Define the email options
-  const mailOptions = {
-    from: `HackFlow Team <${config.EMAIL_USER}>`,
+  await sendResendEmail({
     to: options.email,
     subject: options.subject,
     html: htmlTemplate,
-  };
-
-  const transporter = await getTransporter();
-  await transporter.sendMail(mailOptions);
+  });
 };
 
 module.exports = sendEmail;

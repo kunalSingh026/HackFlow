@@ -1,5 +1,4 @@
-const { getTransporter } = require('../config/email');
-const config = require('../config/config');
+const { sendEmail: sendResendEmail } = require('../config/email');
 
 const sendTicketEmail = async (options) => {
   const htmlTemplate = `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 40px 20px;">
@@ -59,8 +58,7 @@ const sendTicketEmail = async (options) => {
   // Extract the base64 data from the data URI string
   const base64Data = options.qrCodeDataUri.split('base64,')[1];
 
-  const mailOptions = {
-    from: `HackFlow Team <${config.EMAIL_USER}>`,
+  await sendResendEmail({
     to: options.email,
     subject: `Your Ticket for ${options.eventTitle} 🎟️`,
     html: htmlTemplate,
@@ -68,12 +66,9 @@ const sendTicketEmail = async (options) => {
       {
         filename: 'qrcode.png',
         content: base64Data,
-        encoding: 'base64',
-        cid: 'qrcode', // same cid value as in the html img src
+        cid: 'qrcode', // will be mapped to contentId in email.js
       },
     ],
-  };
-  const transporter = await getTransporter();
-  await transporter.sendMail(mailOptions);
+  });
 };
 module.exports = sendTicketEmail;

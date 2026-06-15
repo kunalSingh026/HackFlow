@@ -16,15 +16,21 @@ if (emailPass) {
   emailPass = emailPass.replace(/\s+/g, '');
 }
 
+const resendApiKey = process.env.RESEND_API_KEY;
+
+if (process.env.NODE_ENV === 'production' && !resendApiKey) {
+  throw new Error('RESEND_API_KEY is not defined in environment variables but is required in production');
+}
+
 if (!mongoUri) {
   throw new Error('MONGO_URI is not defined in environment variables');
 }
 
-if (!emailUser) {
+if (!resendApiKey && !emailUser) {
   throw new Error('EMAIL_USER is not defined in environment variables');
 }
 
-if (!emailPass) {
+if (!resendApiKey && !emailPass) {
   throw new Error('EMAIL_PASS is not defined in environment variables');
 }
 
@@ -48,6 +54,7 @@ const config = {
   SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
   SMTP_PORT: process.env.SMTP_PORT || '587',
   SMTP_SECURE: process.env.SMTP_SECURE || 'false',
+  RESEND_API_KEY: resendApiKey,
 };
 
 module.exports = config;
