@@ -15,18 +15,8 @@ let transporter = null;
 const getTransporter = async () => {
   if (transporter) return transporter;
 
-  let host = config.SMTP_HOST;
-  try {
-    // Resolve to IPv4 to prevent ENETUNREACH on platforms where IPv6 is not routable
-    const result = await dns.lookup(config.SMTP_HOST, { family: 4 });
-    host = result.address;
-    console.log(`SMTP host ${config.SMTP_HOST} resolved to IPv4: ${host}`);
-  } catch (err) {
-    console.warn(`Could not resolve ${config.SMTP_HOST} to IPv4, using hostname directly:`, err.message);
-  }
-
   transporter = nodemailer.createTransport({
-    host,
+    host: config.SMTP_HOST,
     port: parseInt(config.SMTP_PORT, 10),
     secure: isSecure,
     auth: {
@@ -34,7 +24,6 @@ const getTransporter = async () => {
       pass: config.EMAIL_PASS,
     },
     tls: {
-      servername: config.SMTP_HOST, // Must match the original hostname for TLS cert validation
       rejectUnauthorized: false,
     },
   });
