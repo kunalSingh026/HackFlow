@@ -24,8 +24,6 @@ You can access the production-ready build of HackFlow using the following links:
 *   **🖥️ Live Client Web App:** [https://hack-flow-rust.vercel.app/](https://hack-flow-rust.vercel.app/) *(Hosted on Vercel)*
 *   **⚙️ Live API Gateway:** [https://hackflow-qche.onrender.com](https://hackflow-qche.onrender.com) *(Hosted on Render)*
 
-> [!TIP]
-> If you are deploying the project on your own custom Vercel/Render accounts, replace the URLs above with your unique domains.
 
 ### 👥 Quick-Start Test Accounts
 To explore the dashboard interfaces and experience the RBAC permissions system without registering new accounts, use these pre-configured credentials:
