@@ -18,19 +18,24 @@ if (emailPass) {
 
 const resendApiKey = process.env.RESEND_API_KEY;
 
-if (process.env.NODE_ENV === 'production' && !resendApiKey) {
-  throw new Error('RESEND_API_KEY is not defined in environment variables but is required in production');
-}
-
 if (!mongoUri) {
   throw new Error('MONGO_URI is not defined in environment variables');
 }
 
-if (!resendApiKey && !emailUser) {
+const hasResend = !!resendApiKey;
+const hasSmtp = !!(emailUser && emailPass);
+
+if (process.env.NODE_ENV === 'production' && !hasResend && !hasSmtp) {
+  throw new Error(
+    'Either RESEND_API_KEY or both EMAIL_USER and EMAIL_PASS must be defined in environment variables for production'
+  );
+}
+
+if (!hasResend && !emailUser) {
   throw new Error('EMAIL_USER is not defined in environment variables');
 }
 
-if (!resendApiKey && !emailPass) {
+if (!hasResend && !emailPass) {
   throw new Error('EMAIL_PASS is not defined in environment variables');
 }
 

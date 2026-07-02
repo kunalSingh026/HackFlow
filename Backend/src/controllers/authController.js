@@ -83,7 +83,7 @@ exports.registerUser = async (req, res) => {
       console.error('Email sending failed:', emailError);
       return res.status(500).json({
         message:
-          'Failed to send OTP email. Please ensure the server is configured with a valid Gmail App Password.',
+          'Failed to send OTP email. Please ensure the server is configured with a valid Resend API Key or Gmail App Password.',
         error: emailError.message,
       });
     }
