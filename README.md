@@ -6,12 +6,15 @@
 
 [![Frontend Deploy](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hack-flow-rust.vercel.app/)
 [![Backend Status](https://img.shields.io/badge/API_Gateway-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://hackflow-qche.onrender.com)
+[![System Documentation](https://img.shields.io/badge/System_Documentation-DocuWriter-EE00EE?style=for-the-badge&logo=gitbook&logoColor=white)](https://app.docuwriter.ai/s/g/share/3320dcf2-b004-4237-b877-25a4a084edc6/t-sp-m-i?signature=4794b1824ca18b6f5e63d16358afaf5b130b45a182c53f6c6ca08d5a00b5d524)
 [![Docker Support](https://img.shields.io/badge/Docker-Compatible-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#-docker-deployment)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 **HackFlow** is a premium, feature-rich, full-stack hackathon management and evaluation platform. Engineered with a secure Role-Based Access Control (RBAC) architecture, it streamlines every phase of a hackathon: from dynamic team matchmaking and automated QR-ticket check-ins via mobile cameras, to multi-criteria judging and mathematically compiled live leaderboards.
 
-[Key Features](#-key-features) • [System Flow](#-system-flow) • [Tech Stack](#-tech-stack) • [Live Demo & Testing](#-live-demo--testing) • [API Directory](#-api-directory) • [Getting Started](#-getting-started) • [Security & Production](#-security--production)
+> 📖 **Comprehensive System Documentation:** For a detailed breakdown of HackFlow's architecture, repository map, product context, and design artifacts, check out the [HackFlow System Documentation on DocuWriter.ai](https://app.docuwriter.ai/s/g/share/3320dcf2-b004-4237-b877-25a4a084edc6/t-sp-m-i?signature=4794b1824ca18b6f5e63d16358afaf5b130b45a182c53f6c6ca08d5a00b5d524).
+
+[Key Features](#-key-features) • [System Flow](#-system-flow) • [Tech Stack](#-tech-stack) • [Live Demo & Testing](#-live-demo--testing) • [System Documentation](https://app.docuwriter.ai/s/g/share/3320dcf2-b004-4237-b877-25a4a084edc6/t-sp-m-i?signature=4794b1824ca18b6f5e63d16358afaf5b130b45a182c53f6c6ca08d5a00b5d524) • [API Directory](#-api-directory) • [Getting Started](#-getting-started) • [Security & Production](#-security--production)
 
 </div>
 

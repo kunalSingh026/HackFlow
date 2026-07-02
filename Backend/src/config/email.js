@@ -44,7 +44,7 @@ const sendEmail = async ({ to, subject, html, attachments }) => {
     try {
       console.log(`Attempting to send email to ${to} via Resend...`);
       const payload = {
-        from: 'onboarding@resend.dev',
+        from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to,
         subject,
         html,

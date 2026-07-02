@@ -20,4 +20,3 @@ if (!isConfigured) {
 }
 
 module.exports = cloudinary;
-
